@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Faculty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        form {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 50px;
+            width: 400px;
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+            color: #333;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            padding: 3px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            background-color: #f44336;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .back-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        Add Faculty
+    </header>
+
+    <form id="addFacultyForm">
+        <label for="id">Faculty ID (Required):</label>
+        <input type="number" id="id" name="id" required>
+
+        <label for="name">Name (Required):</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="subjects">Subjects (Required, comma-separated):</label>
+        <input type="text" id="subjects" name="subjects" placeholder="e.g., C++, DBMS" required>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <button type="submit">Submit</button>
+
+        <!-- Error message display -->
+        <div id="errorMessage" class="error"></div>
+    </form>
+
+    <!-- back btn -->
+    <a href="admin.html" class="back-btn">Back to Dashboard</a>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
+
+    <script>
+        document.getElementById("addFacultyForm").onsubmit = async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData();
+        formData.append("id", document.getElementById("id").value);
+        formData.append("name", document.getElementById("name").value);
+        formData.append("subjects", document.getElementById("subjects").value.split(",").map(s => s.trim()));
+        formData.append("image", document.getElementById("image").files[0]);
+
+        try {
+            const response = await fetch("http://localhost:8080/admin/addFaculty", {
+                method: "POST",
+                body: formData,
+            });
+
+            let responseData;
+
+            // Check if the response is JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                responseData = await response.json(); // Parse JSON if it's JSON response
+            } else {
+                // Treat it as plain text and display it
+                responseData = await response.text();
+            }
+
+            if (response.ok) {
+                alert("Faculty added successfully!");
+                document.getElementById("addFacultyForm").reset();
+                document.getElementById("errorMessage").innerHTML = ""; // Clear error message
+            } else {
+                // Show error message based on the response (whether JSON or plain text)
+                document.getElementById("errorMessage").innerHTML = responseData.message || responseData || "Failed to add faculty. Please try again.";
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred. Please check your backend connection.");
+        }
+    };
+    </script>
+</body>
+</html>
