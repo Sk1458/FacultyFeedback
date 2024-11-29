@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script src="./js/login.js"></script>
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Login Page</h1>
+        <button onclick="openAdminLoginForm()">Login as Admin</button>
+        <button onclick="openStudentLoginForm()">Login as Student</button>
+
+        <!-- Admin Login Form -->
+        <form id="admin-login-form" onsubmit="validateAdminLogin(event)">
+            <h2>Admin Login</h2>
+            <div id="admin-error-message" class="error"></div>
+            <label for="admin-username">Username:</label>
+            <input type="text" id="admin-username" placeholder="Enter username" required>
+            <label for="admin-password">Password:</label>
+            <input type="password" id="admin-password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Student Login Form -->
+        <form id="student-login-form" onsubmit="validateStudentLogin(event)">
+            <h2>Student Login</h2>
+            <div id="student-error-message" class="error"></div>
+            <label for="student-id">Student ID:</label>
+            <input type="text" id="student-id" placeholder="Enter student ID" required>
+            <label for="student-password">Password:</label>
+            <input type="password" id="student-password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Faculty</title>
+    <link rel="stylesheet" href="./css/viewFaculty.css">
+</head>
+<body>
+    <header>
+        View Faculty Information
+    </header>
+
+    <!-- Filter container -->
+    <div class="filter-container">
+        <label for="subjectFilter">Filter by Subject:</label>
+        <select id="subjectFilter" onchange="filterFacultyBySubject()">
+            <option value="">All Subjects</option>
+            <!-- Options will be dynamically populated -->
+        </select>
+    </div>
+
+    <!-- Table container with scroll functionality -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Faculty ID</th>
+                    <th>Name</th>
+                    <th>Subjects</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody id="facultyTableBody">
+                <!-- Data will be populated here dynamically -->
+            </tbody>
+        </table>
+    </div> <br>
+
+    <!-- back btn -->
+    <a href="admin.html" class="back-btn">Back to Dashboard</a>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
+
+    <script src="./js/viewFaculty.js"></script>
+</body>
+</html>

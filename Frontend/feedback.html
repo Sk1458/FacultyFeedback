@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Feedback</title>
+    <script src="./js/feedback.js">
+        
+    </script>
+    <link rel="stylesheet" href="./css/feedback.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logout Button -->
+        <div class="logout-button">
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <h1>Feedback</h1>
+
+        <!-- Table Section -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Faculty ID</th>
+                        <th>Name</th>
+                        <th>Subjects</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="facultyTableBody">
+                    <!-- Data will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

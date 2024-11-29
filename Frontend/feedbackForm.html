@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Feedback</title>
+    <link rel="stylesheet" href="./css/feedbackForm.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Faculty Feedback</h1>
+
+        <!-- Faculty Details Section -->
+        <div class="faculty-details">
+            <p><strong>Faculty ID:</strong> <span id="facultyId"></span></p>
+            <p><strong>Name:</strong> <span id="facultyName"></span></p>
+            <p><strong>Subjects:</strong> <span id="facultySubjects"></span></p>
+            <p><strong>Image:</strong> <img id="facultyImage" width="100" alt="Faculty Image"></p>
+        </div>
+
+        <!-- Feedback Form Section -->
+        <div class="feedback-form">
+            <h2>Provide Your Feedback</h2>
+            <form id="feedbackForm">
+                <label for="selectSubject">Select Subject:</label>
+                <select id="selectSubject" required>
+                    <!-- Options will be populated dynamically -->
+                </select>
+
+                <label for="currentSemester">Enter Current Semester:</label>
+                <input type="number" id="currentSemester" min="1" max="8" required>
+
+                <label for="regularityToClass">Regularity to Class:</label>
+                <select id="regularityToClass" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="knowledgeDepth">Knowledge Depth:</label>
+                <select id="knowledgeDepth" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="communication">Communication:</label>
+                <select id="communication" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="engagement">Engagement:</label>
+                <select id="engagement" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="explanationQuality">Explanation Quality:</label>
+                <select id="explanationQuality" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="overallPerformance">Overall Performance:</label>
+                <select id="overallPerformance" required>
+                    <option value="very bad">Very Bad</option>
+                    <option value="bad">Bad</option>
+                    <option value="good">Good</option>
+                    <option value="very good">Very Good</option>
+                </select>
+
+                <label for="additionalComments">Additional Comments:</label>
+                <textarea id="additionalComments" rows="4"></textarea>
+
+                <button type="submit">Submit Feedback</button>
+            </form>
+            <a href="feedback.html" class="back-btn">Back to Faculty List</a>
+        </div>
+        
+    </div>
+
+    <script src="./js/feedbackForm.js"></script>    
+</body>
+</html>

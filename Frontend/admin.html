@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .logout-button {
+            margin-right: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 200px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease-in-out;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function logOut() {
+            // Redirect to login.html (or any logout endpoint)
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">Welcome to Admin Dashboard</div>
+        <button class="logout-button" onclick="logOut()">Log Out</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <a href="addFaculty.html">
+                <h3>Add Faculty</h3>
+            </a>
+        </div>
+        <div class="card">
+            <a href="updateFaculty.html">
+                <h3>Update Faculty</h3>
+            </a>
+        </div>
+        <div class="card">
+            <a href="viewFaculty.html">
+                <h3>View Faculty</h3>
+            </a>
+        </div>
+        <div class="card">
+            <a href="deleteFaculty.html">
+                <h3>Delete Faculty</h3>
+            </a>
+        </div>
+        <div class="card">
+            <a href="facultyPerformance.html">
+                <h3>Faculty Performance</h3>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
+
+    <script>
+        function logOut() {
+            // Send a logout request to the backend
+            fetch("http://localhost:8080/admin/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Logout successful");
+                    // Redirect to the login page
+                    window.location.href = "login.html";
+                } else {
+                    console.error("Logout failed");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+    
+</body>
+</html>

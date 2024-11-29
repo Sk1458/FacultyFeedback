@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Faculty</title>
+    <link rel="stylesheet" href="./css/deleteFaculty.css">
+</head>
+<body>
+    <header>
+        Delete Faculty
+    </header>
+
+    <!-- Filter Section -->
+    <div class="filter-container">
+        <select id="subjectFilter">
+            <option value="">-- Select Subject --</option>
+            <!-- Options will be populated dynamically -->
+        </select>
+        <button onclick="filterBySubject()">Sort by Subject</button>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Faculty ID</th>
+                    <th>Name</th>
+                    <th>Subjects</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="facultyTableBody">
+                <!-- Data will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <a href="admin.html" class="back-btn">Back to Dashboard</a>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
+
+    <script src="./js/deleteFaculty.js"></script>
+</body>
+</html>

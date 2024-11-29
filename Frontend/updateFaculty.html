@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Faculty</title>
+    <link rel="stylesheet" href="./css/updateFaculty.css">
+</head>
+<body>
+    <header>
+        Update Faculty
+    </header>
+
+    <div class="table-container">
+        <table id="facultyTable">
+            <thead>
+                <tr>
+                    <th>Faculty ID</th>
+                    <th>Name</th>
+                    <th>Subjects</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Faculty data will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Update form -->
+    <div id="updateForm">
+        <!-- Faculty ID Header -->
+        <div id="facultyIdHeader"></div>
+
+        <form id="updateFacultyForm">
+            <label for="updateName">New Name (Optional):</label>
+            <input type="text" id="updateName" name="name">
+
+            <label for="updateAddSubjects">Add Subjects (Optional, comma-separated):</label>
+            <input type="text" id="updateAddSubjects" name="addSubjects">
+
+            <label for="updateRemoveSubjects">Remove Subjects (Optional, comma-separated):</label>
+            <input type="text" id="updateRemoveSubjects" name="removeSubjects">
+
+            <label for="updateImage">New Image (Optional):</label>
+            <input type="file" id="updateImage" name="image" accept="image/*">
+
+            <button type="submit">Submit Updates</button>
+            <button type="button" class="close-btn" onclick="closeUpdateForm()">Cancel</button>
+        </form>
+    </div>
+
+    <a href="admin.html" class="back-btn">Back to Dashboard</a>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
+
+    <script src="./js/updateFaculty.js"></script>
+</body>
+</html>
