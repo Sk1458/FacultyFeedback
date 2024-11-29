@@ -63,3 +63,141 @@ A full-stack web application for managing and analyzing faculty performance feed
    ```bash
    git clone https://github.com/yourusername/faculty-feedback-system.git
    cd faculty-feedback-system
+
+
+## Project Directory Structure
+```bash
+FacultyFeedback(Repository)
+├───Backend
+│   └───FacultyFeedbackSystem
+│       │   .classpath
+│       │   .gitattributes
+│       │   .gitignore
+│       │   .project
+│       │   HELP.md
+│       │   mvnw
+│       │   mvnw.cmd
+│       │   pom.xml
+│       │
+│       ├───.mvn
+│       │   └───wrapper
+│       │           maven-wrapper.properties
+│       │
+│       ├───.settings
+│       │       org.eclipse.core.resources.prefs
+│       │       org.eclipse.jdt.apt.core.prefs
+│       │       org.eclipse.jdt.core.prefs
+│       │       org.eclipse.m2e.core.prefs
+│       │       org.springframework.ide.eclipse.prefs
+│       │
+│       ├───logs
+│       │       admin-activities.html
+│       │
+│       ├───src
+│       │   ├───main
+│       │   │   ├───java
+│       │   │   │   └───com
+│       │   │   │       └───example
+│       │   │   │           └───demo
+│       │   │   │                   Admin.java
+│       │   │   │                   AdminRepository.java
+│       │   │   │                   AdminSetupRunner.java
+│       │   │   │                   CorsConfig.java
+│       │   │   │                   FacultyController.java
+│       │   │   │                   FacultyData.java
+│       │   │   │                   FacultyFeedbackSystemApplication.java
+│       │   │   │                   FacultyPerformanceDTO.java
+│       │   │   │                   FacultyRepository.java
+│       │   │   │                   FeedbackEntry.java
+│       │   │   │                   LoginController.java
+│       │   │   │                   SecurityConfig.java
+│       │   │   │                   StudentController.java
+│       │   │   │                   StudentCredentials.java
+│       │   │   │                   StudentCredentialsRepository.java
+│       │   │   │                   StudentSetupRunner.java
+│       │   │   │
+│       │   │   └───resources
+│       │   │       │   application.properties
+│       │   │       │   LogBack.xml
+│       │   │       │
+│       │   │       ├───static
+│       │   │       └───templates
+│       │   └───test
+│       │       └───java
+│       │           └───com
+│       │               └───example
+│       │                   └───demo
+│       │                           FacultyFeedbackSystemApplicationTests.java
+│       │
+│       └───target
+│           ├───classes
+│           │   │   application.properties
+│           │   │   LogBack.xml
+│           │   │
+│           │   ├───com
+│           │   │   └───example
+│           │   │       └───demo
+│           │   │               Admin.class
+│           │   │               AdminRepository.class
+│           │   │               AdminSetupRunner.class
+│           │   │               CorsConfig$1.class
+│           │   │               CorsConfig.class
+│           │   │               FacultyController.class
+│           │   │               FacultyData.class
+│           │   │               FacultyFeedbackSystemApplication.class
+│           │   │               FacultyPerformanceDTO.class
+│           │   │               FacultyRepository.class
+│           │   │               FeedbackEntry.class
+│           │   │               LoginController.class
+│           │   │               SecurityConfig.class
+│           │   │               StudentController.class
+│           │   │               StudentCredentials.class
+│           │   │               StudentCredentialsRepository.class
+│           │   │               StudentSetupRunner.class
+│           │   │
+│           │   └───META-INF
+│           │       │   MANIFEST.MF
+│           │       │
+│           │       └───maven
+│           │           └───CSE21
+│           │               └───FacultyFeedbackSystem
+│           │                       pom.properties
+│           │                       pom.xml
+│           │
+│           └───test-classes
+│               └───com
+│                   └───example
+│                       └───demo
+│                               FacultyFeedbackSystemApplicationTests.class
+│
+└───Frontend
+    │   addFaculty.html
+    │   admin.html
+    │   deleteFaculty.html
+    │   facultyPerformance.html
+    │   feedback.html
+    │   feedbackForm.html
+    │   login.html
+    │   updateFaculty.html
+    │   viewFaculty.html
+    │
+    ├───css
+    │       addFaculty.css
+    │       deleteFaculty.css
+    │       facultyPerformance.css
+    │       feedback.css
+    │       feedbackForm.css
+    │       login.css
+    │       updateFaculty.css
+    │       viewFaculty.css
+    │
+    └───js
+            addFaculty.js
+            deleteFaculty.js
+            facultyPerformance.js
+            feedback.js
+            feedbackForm.js
+            login.js
+            updateFaculty.js
+            viewFaculty.js
+
