@@ -62,11 +62,37 @@ A full-stack web application for managing and analyzing faculty performance feed
 
 ## How to Run
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/faculty-feedback-system.git
-   cd faculty-feedback-system
+- 1. **Clone the repository:**
+     ```bash
+     git clone https://github.com/yourusername/faculty-feedback-system.git
+     cd faculty-feedback-system
+     
+- 2. **Set Up the Frontend:**
+     Navigate to the Frontend folder.
+     Open the login.html file using:
+       - VS Code Live Server (recommended).
+       - Any other HTML rendering platform of your choice.
+      
+- 3. **Configure CORS Origins:**
+     - Locate the @CorsOrigins annotation in the controller classes inside the Backend folder:
+       ```bash
+       src/main/java/com/example/demo
+     - Update the value to match the link where the frontend HTML files will run (e.g., http://localhost:5500 for VS Code Live Server).
 
+- 4. **Configure the database:**
+    - Open the application.properties or application.yml file located in:
+      ```bash
+       src/main/resources/.
+      
+    - Update the database credentials:
+      ```bash
+      spring.datasource.url=jdbc:mysql://localhost:3306/your-database-name
+      spring.datasource.username=your-username
+      spring.datasource.password=your-password
+      
+- 5. **Run the application:**
+    - Launch the backend application from your Java-supported IDE.
+    - Access the frontend HTML pages using the live rendering method chosen earlier.
 
 ## Project Directory Structure
 ```bash
