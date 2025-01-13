@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!-- Console Appender with Default Spring Boot Pattern -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %highlight(%-5level) %logger{36} - %msg%n
+            </pattern>
+            <immediateFlush>true</immediateFlush>
+    		<outputPatternAsHeader>true</outputPatternAsHeader>
+        </encoder>
+    </appender>
+
+    <!-- HTML Appender for Admin Activities -->
+    <appender name="ADMIN_ACTIVITY_HTML" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/admin-activities.html</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/admin-activities.%d{yyyy-MM-dd}.html</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.html.HTMLLayout" />
+        </encoder>
+    </appender>
+    
+    <!-- Logger for Admin (Exclude application startup logs) -->
+    <logger name="com.example.demo.FacultyFeedbackSystemApplication" level="WARN" additivity="false">
+        <appender-ref ref="ADMIN_ACTIVITY_HTML" />
+    </logger>
+
+    <!-- Logger for Admin -->
+    <logger name="com.example.demo" level="INFO" additivity="false">
+        <appender-ref ref="ADMIN_ACTIVITY_HTML" />
+    </logger>
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

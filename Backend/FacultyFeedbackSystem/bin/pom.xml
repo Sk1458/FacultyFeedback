@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.7</version>
+		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>CSE21</groupId>
@@ -83,19 +83,7 @@
 		    <artifactId>spring-boot-starter-logging</artifactId>    
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
-		<dependency>
-		    <groupId>edu.stanford.nlp</groupId>
-		    <artifactId>stanford-corenlp</artifactId>
-		    <version>4.4.0</version>
-		</dependency>
-		<dependency>
-		    <groupId>edu.stanford.nlp</groupId>
-		    <artifactId>stanford-corenlp</artifactId>
-		    <version>4.4.0</version>
-		    <classifier>models</classifier>
-		</dependency>
-		
+
 	</dependencies>
 
 	<build>
