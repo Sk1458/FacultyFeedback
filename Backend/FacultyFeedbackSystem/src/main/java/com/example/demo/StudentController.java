@@ -22,6 +22,9 @@ public class StudentController {
 	@Autowired
 	FacultyRepository facultyRepo;
 	
+//	@Autowired
+//	StanfordNLPProcessor nlpProcessor;
+	
 	Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
 	 @GetMapping("/student/viewFaculty/{facultyId}")
@@ -68,8 +71,17 @@ public class StudentController {
 		            logger.warn("Faculty with ID = {} not found", facultyId);
 		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
 		        }
+		        
+		        // Analyzing the comments in the feedback
+	            String comments = feedback.getAdditionalComments();
+	            if (comments != null && !comments.isEmpty()) {
+	                logger.info("Analyzing comments for feedback: {}", comments);
+	                String analysisResult = StanfordNLPProcessor.processText(comments);
+	                feedback.setAnalysisResult(analysisResult); // Assuming FeedbackEntry has this field
+	                logger.info("NLP Analysis Result: {}", analysisResult);
+	            }
 
-		        // Add the new feedback entry to the faculty's feedback list
+		        // Added the new feedback entry to the faculty's feedback list
 		        faculty.getFeedbacks().add(feedback);
 		        facultyRepo.save(faculty);
 

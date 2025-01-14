@@ -32,6 +32,17 @@ public class FeedbackEntry {
 
     @Column
     private String additionalComments;
+    
+    @Column
+    private String analysisResult;
+
+	public String getAnalysisResult() {
+		return analysisResult;
+	}
+
+	public void setAnalysisResult(String analysisResult) {
+		this.analysisResult = analysisResult;
+	}
 
 	public String getSubject() {
 		return subject;
