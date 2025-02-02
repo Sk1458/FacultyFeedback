@@ -22,9 +22,6 @@ public class StudentController {
 	@Autowired
 	FacultyRepository facultyRepo;
 	
-//	@Autowired
-//	StanfordNLPProcessor nlpProcessor;
-	
 	Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
 	 @GetMapping("/student/viewFaculty/{facultyId}")
@@ -42,7 +39,9 @@ public class StudentController {
 	                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
 	                    faculty.setBase64Image(base64Image);  // Assuming you have this method in your FacultyData model
 	                }
+	                
 	                logger.info("Faculty details successfully retrieved for ID = {}", facultyId);
+	                System.out.println("Faculty Subjects: {}" + faculty.getSubjects());
 	                return ResponseEntity.ok(faculty);
 	            }
 	            else {

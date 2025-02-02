@@ -18,8 +18,14 @@
         <label for="name">Name (Required):</label>
         <input type="text" id="name" name="name" required>
 
-        <label for="subjects">Subjects (Required, comma-separated):</label>
-        <input type="text" id="subjects" name="subjects" placeholder="e.g., C++, DBMS" required>
+        <!-- <label for="subjects">Subjects (Required, comma-separated):</label>
+        <input type="text" id="subjects" name="subjects" placeholder="e.g., C++, DBMS" required> -->
+        
+        <label>Subjects and Semesters:</label>
+        <div id="subjectsContainer">
+            <!-- Dynamic fields will be added here -->
+        </div>
+        <button type="button" onclick="addSubjectField()">Add Subject</button>
 
         <label for="image">Upload Image:</label>
         <input type="file" id="image" name="image" accept="image/*">

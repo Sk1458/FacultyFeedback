@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 public class FacultyController {
@@ -32,57 +35,70 @@ public class FacultyController {
     FacultyRepository facultyRepo;
 	
 	@GetMapping("/admin/viewFaculty")
-    public ResponseEntity<List<FacultyData>> viewAllFaculty() {
+    public ResponseEntity<List<FacultyDTO>> viewAllFaculty() {
 		
 		logger.info("View Faculty Request Received from Admin");
-        try {
-            List<FacultyData> facultyList = facultyRepo.findAll(); // Retrieve all faculty data
-            for (FacultyData faculty : facultyList) {
-                if (faculty.getImage() != null) {
-                    // Convert the byte array to a base64 string and set it on the FacultyData object
-                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
-                    faculty.setBase64Image(base64Image);
-                }
-            }
-            logger.info("Admin Successfully viewed the Faculty List");
-            return ResponseEntity.ok(facultyList);
-        } catch (Exception e) {
-        	logger.error("An error occurred while viewing faculty List");
-        	
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null); // Error handling
-        }
+//        try {
+//            List<FacultyData> facultyList = facultyRepo.findAll(); // Retrieve all faculty data
+//            for (FacultyData faculty : facultyList) {
+//                if (faculty.getImage() != null) {
+//                    // Convert the byte array to a base64 string and set it on the FacultyData object
+//                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
+//                    faculty.setBase64Image(base64Image);
+//                }
+//            }
+//            logger.info("Admin Successfully viewed the Faculty List");
+//            return ResponseEntity.ok(facultyList);
+//        } catch (Exception e) {
+//        	logger.error("An error occurred while viewing faculty List");
+//        	
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body(null); // Error handling
+//        }
+		
+		try {
+	        List<FacultyData> facultyList = facultyRepo.findAll();
+	        List<FacultyDTO> facultyDTOList = facultyList.stream().map(faculty -> {
+	            List<String> subjectNames = faculty.getSubjects().stream()
+	                .map(FacultySubject::getSubject)
+	                .collect(Collectors.toList());
+
+	            String base64Image = faculty.getImage() != null ? Base64.getEncoder().encodeToString(faculty.getImage()) : null;
+	            return new FacultyDTO(faculty.getId(), faculty.getName(), subjectNames, base64Image);
+	        }).collect(Collectors.toList());
+
+	        return ResponseEntity.ok(facultyDTOList);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(500).body(null);
+	    }
     }
 	
 	@PostMapping("/admin/addFaculty")
-    public ResponseEntity<String> addFaculty(@RequestParam int id,
-    										 @RequestParam String name,
-    										 @RequestParam List<String> subjects,
-    										 @RequestParam(required = false) MultipartFile image) {
+    public ResponseEntity<String> addFaculty(@RequestParam(value = "id") int id,
+    										 @RequestParam(value = "name") String name,
+    										 @RequestParam(value = "subjects") String subjectsJson,
+    										 @RequestParam(value = "image", required = false) MultipartFile image) {
 		
 		logger.info("Add Faculty Request Received from Admin");
 
 		try {
-            
-            if (facultyRepo.existsById(id)) {
-                return ResponseEntity.badRequest().body("Faculty with ID " + id + " already exists.");
-            }
+			
+			if (facultyRepo.existsById(id)) {
+	            return ResponseEntity.badRequest().body("Faculty with ID " + id + " already exists.");
+	        }
 
-            
-//            if (image != null && image.getSize() > 2 * 1024 * 1024) { // Limit to 2 MB
-//                return ResponseEntity.badRequest().body("Image size exceeds 2 MB.");
-//            }
+	        // Convert JSON string to List<FacultySubject>
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        List<FacultySubject> subjects = objectMapper.readValue(subjectsJson, new TypeReference<List<FacultySubject>>() {});
 
-            
-            byte[] imageData = image != null ? image.getBytes() : null;
+	        byte[] imageData = (image != null && !image.isEmpty()) ? image.getBytes() : null;
 
-            
-            FacultyData faculty = new FacultyData(id, name, subjects, imageData);
-            facultyRepo.save(faculty);
-            
-            logger.info("Admin Successfully Added Faculty with ID = {}", id);
+	        FacultyData faculty = new FacultyData(id, name, subjects, imageData);
+	        facultyRepo.save(faculty);
 
-            return ResponseEntity.ok("Faculty added successfully!");
+	        logger.info("Admin Successfully Added Faculty with ID = {}", id);
+	        return ResponseEntity.ok("Faculty added successfully!");
         }
 		catch (Exception e) {
 			logger.error("An error occurred while adding faculty with ID = {}, Error = {}", id, e.toString());
@@ -96,8 +112,8 @@ public class FacultyController {
 	@PutMapping("/admin/updateFaculty")
 	public ResponseEntity<String> updateFaculty(@RequestParam int id,
 	        									@RequestParam(required = false) String name,
-	        									@RequestParam(required = false) List<String> addSubjects,
-	        									@RequestParam(required = false) List<String> removeSubjects,
+	        									@RequestParam(required = false) List<FacultySubject> addSubjects,
+	        									@RequestParam(required = false) List<FacultySubject> removeSubjects,
 	        									@RequestParam(required = false) MultipartFile image) {
 
 		logger.warn("Update Faculty Request Received from Admin");
