@@ -17,7 +17,9 @@
                 <tr>
                     <th>Faculty ID</th>
                     <th>Name</th>
-                    <th>Subjects</th>
+                    <th>Email</th> 
+                    <th>Mobile Number</th>
+                    <th>Subjects & Semesters</th>
                     <th>Image</th>
                     <th>Action</th>
                 </tr>
@@ -37,11 +39,17 @@
             <label for="updateName">New Name (Optional):</label>
             <input type="text" id="updateName" name="name">
 
-            <label for="updateAddSubjects">Add Subjects (Optional, comma-separated):</label>
-            <input type="text" id="updateAddSubjects" name="addSubjects">
+            <label for="updateMobileNumber">New Mobile Number (Optional):</label>
+            <input type="text" id="updateMobileNumber" name="mobileNumber">
 
-            <label for="updateRemoveSubjects">Remove Subjects (Optional, comma-separated):</label>
-            <input type="text" id="updateRemoveSubjects" name="removeSubjects">
+            <label for="updateEmail">New Email (Optional):</label>
+            <input type="email" id="updateEmail" name="email">
+
+            <label for="updateSubjects">Update Subjects and Semesters:</label>
+            <div id="updateSubjectsContainer">
+                <!-- Existing subject-semester pairs will be displayed here -->
+            </div>
+            <button type="button" id="addSubjectButton">Add Subject-Semester Pair</button>
 
             <label for="updateImage">New Image (Optional):</label>
             <input type="file" id="updateImage" name="image" accept="image/*">

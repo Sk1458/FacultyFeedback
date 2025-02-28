@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLP-driven Sentiment Analysis-based Faculty Insights System</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    :root {
+      --primary-bg: #2e3b4e;
+      --slide-1: #ff7e5f;
+      --slide-2: #6a11cb;
+      --slide-3: #00c6ff;
+      --slide-4: #ff6a00;
+      --slide-5: #ff9a8b;
+      --nav-yellow: #ffeb3b;
+      --nav-hover: rgba(255, 235, 59, 0.2);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      --transition-speed: 1s;
+    }
+
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      background-color: var(--primary-bg);
+      transition: background-color var(--transition-speed) ease;
+      opacity: 0;
+      animation: fadeIn var(--transition-speed) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      letter-spacing: 0.5px;
+      padding: 0.75rem 1rem;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0, 0, 0, 0.85);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+    .navbar-toggler {
+      border: none;
+    }
+    .navbar-toggler-icon {
+      background-color: var(--nav-yellow);
+      border-radius: 3px;
+    }
+    .navbar-nav .nav-item {
+      margin-right: 15px;
+    }
+    .navbar-nav .nav-link {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--nav-yellow) !important;
+      padding: 10px 15px;
+      transition: all 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:focus {
+      background-color: var(--nav-hover);
+      border-radius: 5px;
+      color: #fff !important;
+      text-shadow: 0 0 5px var(--nav-yellow);
+    }
+    .navbar-nav .nav-item:last-child {
+      margin-right: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      color: #fff;
+      text-align: center;
+      padding: 120px 20px;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, rgba(152, 252, 255, 0.8), rgba(167, 194, 12, 0.8));
+      opacity: 0;
+      animation: slideIn var(--transition-speed) forwards;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-shadow: var(--text-shadow);
+    }
+    .hero p {
+      font-size: 1.25rem;
+      font-weight: 400;
+      max-width: 700px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.6;
+    }
+
+    /* Carousel Item Styles */
+    .carousel-item {
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+      padding: 100px 0;
+      transition: background-color var(--transition-speed) ease;
+    }
+    .carousel-item:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 0;
+    }
+    .carousel-inner {
+      z-index: 1;
+    }
+    /* Slide backgrounds */
+    .carousel-item-1 {
+      background-image: url('./images/home3.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 500px;
+      position: relative;
+    }
+
+    .carousel-content {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      text-align: right;
+      padding: 20px;
+    }
+
+    .carousel-item-2 {
+      background-image: url('./images/nlp.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 500px;
+      position: relative;
+    }
+
+    .carousel-item-2 h1 {
+      position: absolute;
+      top: 10%;
+      left: 5%;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .carousel-item-2 p {
+      position: absolute;
+      top: 20%;
+      left: 5%;
+      color: white;
+      font-size: 1.25rem;
+      width: 50%;
+    }
+
+    .carousel-item-3 {
+      background-image: url('./images/db.jpg');
+      background-size: cover;
+      background-position: top center;
+      height: 500px;
+      position: relative;
+    }
+
+    .carousel-item-4 {
+      background-image: url('./images/ad.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 500px;
+      position: relative;
+    }
+
+    .carousel-item-4 h1 {
+      position: absolute;
+      top: 10%;
+      left: 5%;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .carousel-item-4 p {
+      position: absolute;
+      top: 20%;
+      left: 5%;
+      color: white;
+      font-size: 1.25rem;
+      width: 50%;
+    }
+/* Feedback Slide (Bottom text) */
+.carousel-item-5 {
+  background-image: url('./images/feed.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  position: relative;
+}
+
+.carousel-item-5 h1,
+.carousel-item-5 p {
+  position: absolute;
+  bottom: 12%; /* Position text at the bottom */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust text to be perfectly centered */
+  color: white;
+  font-size: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  text-align: center; /* Align text to the center */
+  padding: 20px;
+}
+
+.carousel-item-5 h1 {
+  font-size: 2.5rem;
+}
+
+.carousel-item-5 p {
+  font-size: 1.25rem;
+}
+
+
+/* Database Slide (Top text) */
+.carousel-item-3 p {
+  position: absolute;
+  top: 10%; /* Moves the text towards the top */
+  left: 5%;
+  color: white;
+  font-size: 1.25rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+    .carousel-item.carousel-item-6 {
+        padding: 0 !important;
+        background: url('./images/home1.jpg') center no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+        }
+
+    .carousel-item.carousel-item-6 img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel-item-7 {
+      background-image: url('./images/slide.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 500px;
+    }
+    .footer {
+      background-color: #343a40;
+      color: #fff;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeInFooter 1s 0.5s forwards;
+    }
+    @keyframes fadeInFooter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .footer .row h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .footer .row p {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .footer .btn-link {
+      color: var(--nav-yellow);
+      transition: color 0.3s ease;
+    }
+    .footer .btn-link:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">NLP-driven Sentiment Analysis-based Faculty Insights System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Carousel -->
+  <header class="hero">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+      <div class="carousel-inner">
+        <div class="carousel-item carousel-item-6"></div>
+        <div class="carousel-item active carousel-item-1">
+          <div class="carousel-content">
+            <h1>Welcome to Our Project</h1>
+            <p>Harnessing the Power of Student Feedback for Teaching Excellence and Growth</p>
+            <p>Student feedback is a cornerstone of continuous improvement. By carefully analyzing feedback, we gain valuable insights into teaching effectiveness and student engagement. This helps educators refine their approaches, address individual needs, and ultimately elevate the learning experience. For students, it creates a more personalized learning environment, promoting their growth and success. Together, we create a cycle of improvement that benefits both teaching quality and student outcomes.</p>
+          </div>
+        </div>
+        <div class="carousel-item carousel-item-2">
+          <h1>Why NLP?</h1>
+          <p>NLP processes feedback in a professional manner, enabling accurate sentiment analysis, allowing us to gain deep insights into student opinions and improve teaching strategies effectively.</p>
+        </div>
+        <div class="carousel-item carousel-item-3">
+            <p>Our advanced database system efficiently manages faculty profiles, secure login credentials, and valuable feedback, ensuring data integrity and providing a seamless user experience. This system plays a crucial role in supporting continuous improvements in both teaching methodologies and student outcomes, facilitating a data-driven approach to educational excellence.</p>
+          </div>
+          <div class="carousel-item carousel-item-4">
+            <h1>Administrator Role</h1>
+            <p>The Administrator is responsible for overseeing faculty data management, generating insightful reports, and ensuring the smooth operation of feedback processes. By maintaining rigorous standards of data accuracy and operational efficiency, the Administrator plays a pivotal role in fostering a culture of continuous educational improvement and academic excellence.</p>
+          </div>
+                    
+        <div class="carousel-item carousel-item-5">
+          <p>Feedback plays a crucial role in enhancing education quality by identifying areas for improvement in teaching methods, which leads to better student performance and overall learning outcomes.</p>
+        </div>
+        <div class="carousel-item carousel-item-7"></div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Footer Section -->
+  <div class="container-fluid footer text-center">
+    <div class="row">
+      <div class="col-md-3" id="footer-about">
+        <h3>About</h3>
+        <p>Learn more about our project and objectives.</p>
+        <button class="btn btn-link" onclick="location.href='about.html'">Read More</button>
+      </div>
+      <div class="col-md-3" id="footer-help">
+        <h3>Help</h3>
+        <p>Find answers to common questions and get support.</p>
+        <button class="btn btn-link" onclick="location.href='help.html'">Get Help</button>
+      </div>
+      <div class="col-md-3" id="footer-login">
+        <h3>Login</h3>
+        <p>Access your account securely.</p>
+        <button class="btn btn-link" onclick="location.href='login.html'">Login</button>
+      </div>
+      <div class="col-md-3" id="footer-register">
+        <h3>Register</h3>
+        <p>Create a new account to get started.</p>
+        <button class="btn btn-link" onclick="location.href='register.html'">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Change navbar background on scroll
+    window.onscroll = function () {
+      const navbar = document.getElementById('navbar');
+      if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    };
+  </script>
+</body>
+</html>

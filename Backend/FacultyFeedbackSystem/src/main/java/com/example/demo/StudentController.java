@@ -23,42 +23,43 @@ public class StudentController {
 	@Autowired
 	FacultyRepository facultyRepo;
 	
-	@Autowired
-	CommentAnalyzer commentAnalyzer;
-	
+
+
 	Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
 	@GetMapping("/student/viewFaculty/{facultyId}")
 	public ResponseEntity<FacultyData> getFacultyById(@PathVariable("facultyId") int facultyId) {
 	        
-        logger.info("View Faculty Request Received from Student for Faculty ID = {}", facultyId);
-        
-        try {
-        	
-            FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
-            if (faculty != null) {
-                // Convert image to base64 if it exists
-            	
-                if (faculty.getImage() != null) {
-                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
-                    faculty.setBase64Image(base64Image);  // Assuming you have this method in your FacultyData model
-                }
-                logger.info("Faculty details successfully retrieved for ID = {}", facultyId);
-                return ResponseEntity.ok(faculty);
-            }
-            else {
-            	
-                logger.warn("Faculty with ID = {} not found", facultyId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-        }
-        catch (Exception e) {
-        	
-            logger.error("An error occurred while viewing faculty details for ID = {}, Error = {}", facultyId, e.toString());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+
+	        try {
+	        	
+	            FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
+	            if (faculty != null) {
+	                // Convert image to base64 if it exists
+	            	
+	                if (faculty.getImage() != null) {
+	                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
+	                    faculty.setBase64Image(base64Image);  // Assuming you have this method in your FacultyData model
+	                }
+	                
+	                logger.info("Faculty details successfully retrieved for ID = {}", facultyId);
+	                System.out.println("Faculty Subjects: {}" + faculty.getSubjects());
+	                return ResponseEntity.ok(faculty);
+	            }
+	            else {
+	            	
+	                logger.warn("Faculty with ID = {} not found", facultyId);
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	            }
+	        }
+	        catch (Exception e) {
+	        	
+	            logger.error("An error occurred while viewing faculty details for ID = {}, Error = {}", facultyId, e.toString());
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	        }
+	    }
+
 	 
 	@PostMapping("/student/submitFeedback")
 	public ResponseEntity<String> submitFeedback(@RequestBody FeedbackEntry feedback, @RequestParam int facultyId) {
