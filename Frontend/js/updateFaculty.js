@@ -24,11 +24,18 @@ function populateFacultyTable(facultyList) {
 
     facultyList.forEach(faculty => {
         const row = document.createElement("tr");
-
+        
+        // Make sure 'faculty.subjects' is an array of objects with 'subject' and 'semester'
+        const subjectSemesterPairs = faculty.subjects && Array.isArray(faculty.subjects)
+            ? faculty.subjects.map(subject => `${subject.subject} - ${subject.semester}`).join(", ")
+            : "No subjects";  // Handle case where there are no subjects
+        
         row.innerHTML = `
             <td>${faculty.id}</td>
-            <td>${faculty.name}</td>
-            <td>${faculty.subjects.join(", ")}</td>
+            <td>${faculty.name}</td>  
+            <td>${faculty.email}</td>
+            <td>${faculty.mobileNumber}</td> 
+            <td>${subjectSemesterPairs}</td>
             <td>
                 ${faculty.base64Image ? `<img src="data:image/jpeg;base64,${faculty.base64Image}" alt="${faculty.name}" width="50">` : "No Image"}
             </td>

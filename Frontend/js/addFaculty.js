@@ -43,6 +43,8 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
 
     const facultyId = document.getElementById("id").value;
     const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const mobileNumber = document.getElementById("mobileNumber").value;
     const imageInput = document.getElementById("image");
     const imageFile = imageInput.files[0];
 
@@ -62,6 +64,8 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
             const formData = new FormData();
             formData.append("id", facultyId);
             formData.append("name", name);
+            formData.append("email", email);
+            formData.append("mobileNumber", mobileNumber);
             formData.append("image", imageFile);
             formData.append("subjects", JSON.stringify(subjects)); // Ensure backend correctly parses this
 
@@ -71,10 +75,23 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
             });
         } else {
             // If no image, send JSON payload
+            // response = await fetch("http://localhost:8080/admin/addFaculty", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ id: facultyId, name, subjects }),
+            // });
+
+            const formData = new FormData();
+            formData.append("id", facultyId);
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("mobileNumber", mobileNumber);
+            //formData.append("image", imageFile);
+            formData.append("subjects", JSON.stringify(subjects)); // Ensure backend correctly parses this
+
             response = await fetch("http://localhost:8080/admin/addFaculty", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: facultyId, name, subjects }),
+                body: formData,
             });
         }
 
@@ -82,11 +99,15 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
             const facultyDetails = {
                 id: facultyId,
                 name: name,
+                email: email,
+                mobileNumber: mobileNumber,
                 subjects: subjects.map(s => `${s.subject} (Sem ${s.semester})`).join(", "),
             };
 
             document.getElementById("modalId").textContent = facultyDetails.id;
             document.getElementById("modalName").textContent = facultyDetails.name;
+            document.getElementById("modalEmail").textContent = facultyDetails.email;
+            document.getElementById("modalMobile").textContent = facultyDetails.mobileNumber;
             document.getElementById("modalSubjects").textContent = facultyDetails.subjects;
 
             modal.style.display = "block"; // Show the modal

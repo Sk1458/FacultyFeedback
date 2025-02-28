@@ -18,8 +18,11 @@
         <label for="name">Name (Required):</label>
         <input type="text" id="name" name="name" required>
 
-        <!-- <label for="subjects">Subjects (Required, comma-separated):</label>
-        <input type="text" id="subjects" name="subjects" placeholder="e.g., C++, DBMS" required> -->
+        <label for="email">Email (Required):</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="mobile">Mobile Number (Required):</label>
+        <input type="tel" id="mobileNumber" name="mobileNumber" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
         
         <label>Subjects and Semesters:</label>
         <div id="subjectsContainer">
@@ -41,6 +44,8 @@
             <h3>Faculty Added Successfully!</h3>
             <p><strong>ID:</strong> <span id="modalId"></span></p>
             <p><strong>Name:</strong> <span id="modalName"></span></p>
+            <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+            <p><strong>Mobile Number:</strong> <span id="modalMobile"></span></p>
             <p><strong>Subjects:</strong> <span id="modalSubjects"></span></p>
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
