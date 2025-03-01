@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import java.util.Base64;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +22,13 @@ public class StudentController {
 	@Autowired
 	FacultyRepository facultyRepo;
 	
-
-
 	Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
-	@GetMapping("/student/viewFaculty/{facultyId}")
-	public ResponseEntity<FacultyData> getFacultyById(@PathVariable("facultyId") int facultyId) {
+	 @GetMapping("/student/viewFaculty/{facultyId}")
+	    public ResponseEntity<FacultyData> getFacultyById(@PathVariable("facultyId") int facultyId) {
 	        
-
+	        logger.info("View Faculty Request Received from Student for Faculty ID = {}", facultyId);
+	        
 	        try {
 	        	
 	            FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
@@ -59,56 +57,41 @@ public class StudentController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	        }
 	    }
-
 	 
-	@PostMapping("/student/submitFeedback")
-	public ResponseEntity<String> submitFeedback(@RequestBody FeedbackEntry feedback, @RequestParam int facultyId) {
-		logger.info("Feedback submission request received for Faculty ID = {}", facultyId);
+	 @PostMapping("/student/submitFeedback")
+	 public ResponseEntity<String> submitFeedback(@RequestBody FeedbackEntry feedback, @RequestParam int facultyId) {
+		    logger.info("Feedback submission request received for Faculty ID = {}", facultyId);
 
-	    try {
-	    	
-	        FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
+		    try {
+		    	
+		        FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
 
-	        if (faculty == null) {
-	            logger.warn("Faculty with ID = {} not found", facultyId);
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
-	        }
-	        
-	        // Analyzing the comments in the feedback
-            String comments = feedback.getAdditionalComments();
-            if (comments != null && !comments.isEmpty()) {
-                logger.info("Analyzing comments for feedback: {}", comments);
-                  
-                // Perform Sentiment Analysis
-                String sentimentAnalysis = StanfordNLPProcessor.processText(comments);  // Sentiment analysis logic
-                
-                // Proper utilization analysis using CommentAnalyzer
-                Map<String, Object> utilizationAnalysis = commentAnalyzer.analyzeComment(comments);
-                boolean isProperlyUtilized = (boolean) utilizationAnalysis.get("isProperlyUtilized");
-                
-                // Combine both results into a single analysisResult string
-                String combinedResult = String.format(
-                    "Sentiment: %s, Properly Utilized: %s", 
-                    sentimentAnalysis, 
-                    isProperlyUtilized ? "Yes" : "No"
-                );
-                
-                feedback.setAnalysisResult(combinedResult); // Assuming FeedbackEntry has this field
-                logger.info("NLP Analysis Result: {}", combinedResult);
-            }
+		        if (faculty == null) {
+		            logger.warn("Faculty with ID = {} not found", facultyId);
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
+		        }
+		        
+		        // Analyzing the comments in the feedback
+	            String comments = feedback.getAdditionalComments();
+	            if (comments != null && !comments.isEmpty()) {
+	                logger.info("Analyzing comments for feedback: {}", comments);
+	                String analysisResult = StanfordNLPProcessor.processText(comments);
+	                feedback.setAnalysisResult(analysisResult); // Assuming FeedbackEntry has this field
+	                logger.info("NLP Analysis Result: {}", analysisResult);
+	            }
 
-	        // Added the new feedback entry to the faculty's feedback list
-	        faculty.getFeedbacks().add(feedback);
-	        facultyRepo.save(faculty);
+		        // Added the new feedback entry to the faculty's feedback list
+		        faculty.getFeedbacks().add(feedback);
+		        facultyRepo.save(faculty);
 
-	        logger.info("Feedback successfully added for Faculty ID = {}", facultyId);
-	        return ResponseEntity.ok("Feedback submitted successfully!");
-	    }
-	    catch (Exception e) {
-	    	
-	        logger.error("An error occurred while submitting feedback: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit feedback");
-	    }
-	}
+		        logger.info("Feedback successfully added for Faculty ID = {}", facultyId);
+		        return ResponseEntity.ok("Feedback submitted successfully!");
+		    }
+		    catch (Exception e) {
+		    	
+		        logger.error("An error occurred while submitting feedback: {}", e.getMessage());
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit feedback");
+		    }
+		}
 	
 }

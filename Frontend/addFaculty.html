@@ -8,35 +8,46 @@
 </head>
 <body>
     <header>
-        Add Faculty
+        <p class="p1">Add Faculty</p>
+        <p class="p2"><a href="admin.html"><button>Admin Dashboard</button></a></p>
     </header>
 
-    <form id="addFacultyForm">
-        <label for="id">Faculty ID (Required):</label>
-        <input type="number" id="id" name="id" required>
+    <div class="container">
+        <!-- Left: Form Section -->
+        <div class="form-container">
+            <form id="addFacultyForm">
+                <label for="id">Faculty ID (Required):</label>
+                <input type="number" id="id" name="id" required>
 
-        <label for="name">Name (Required):</label>
-        <input type="text" id="name" name="name" required>
+                <label for="name">Name (Required):</label>
+                <input type="text" id="name" name="name" required>
 
-        <label for="email">Email (Required):</label>
-        <input type="email" id="email" name="email" required>
+                <label for="email">Email (Required):</label>
+                <input type="email" id="email" name="email" required>
 
-        <label for="mobile">Mobile Number (Required):</label>
-        <input type="tel" id="mobileNumber" name="mobileNumber" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
-        
-        <label>Subjects and Semesters:</label>
-        <div id="subjectsContainer">
-            <!-- Dynamic fields will be added here -->
+                <label for="mobile">Mobile Number (Required):</label>
+                <input type="tel" id="mobileNumber" name="mobileNumber" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
+                
+                <label>Subjects and Semesters:</label>
+                <div id="subjectsContainer">
+                    <!-- Dynamic fields added here -->
+                </div>
+                <button type="button" class="add-btn" onclick="addSubjectField()">+ Add Subject</button>
+
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*">
+
+                <button type="submit">Submit</button>
+
+                <div id="errorMessage" class="error"></div>
+            </form>
         </div>
-        <button type="button" onclick="addSubjectField()">Add Subject</button>
 
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*">
-
-        <button type="submit">Submit</button>
-
-        <div id="errorMessage" class="error"></div>
-    </form>
+        <!-- Right: Image Section -->
+        <div class="image-container">
+            <img src="images/add.avif" alt="Faculty Image">
+        </div>
+    </div>
 
     <!-- Modal -->
     <div id="facultyModal" class="modal">
@@ -51,13 +62,6 @@
         </div>
     </div>
 
-    <a href="admin.html" class="back-btn">Back to Dashboard</a>
-
-    <footer>
-        Admin Panel | Faculty Feedback System
-    </footer>
-
     <script src="./js/addFaculty.js"></script>
-
 </body>
 </html>

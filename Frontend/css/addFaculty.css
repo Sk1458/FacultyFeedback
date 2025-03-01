@@ -1,93 +1,204 @@
+/* Import Google Font & Icons */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+/* Global Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    position: relative;
+    color: #ffffff;
 }
 
+/* Header */
 header {
-    background-color: #4CAF50;
+    background: linear-gradient(90deg, #102a43, #243b55);
     color: white;
-    padding: 20px;
+    padding: 12px 25px;
     width: 100%;
-    text-align: center;
-    font-size: 24px;
+    font-size: 26px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.p1 {
+    margin-left: 20px;
+}
+
+.p2 {
+    margin-right: 20px;
+}
+
+.p2 a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.p2 a:hover {
+    text-decoration: underline;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 96vh; /* Set a max-height */
+    margin: 30px auto;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Enable vertical scrolling */
+}
+
+
+/* Left Side - Form */
+.form-container {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
 }
 
 form {
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 50px;
-    width: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    width: 90%;
+    max-width: 450px;
+    animation: slideIn 0.8s ease-out;
+    transition: transform 0.3s ease-in-out;
 }
 
+form:hover {
+    transform: translateY(-5px);
+}
+
+/* Right Side - Image */
+.image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Labels */
 label {
     font-size: 14px;
+    font-weight: bold;
+    color: #e0e0e0;
     margin-bottom: 5px;
     display: block;
-    color: #333;
 }
 
-input, textarea, button {
+label::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    color: #61dafb;
+}
+
+label[for="id"]::before { content: "\f2c0"; }  /* User icon */
+label[for="name"]::before { content: "\f007"; } /* Person icon */
+label[for="email"]::before { content: "\f0e0"; } /* Email icon */
+label[for="mobile"]::before { content: "\f095"; } /* Phone icon */
+label[for="image"]::before { content: "\f030"; } /* Camera icon */
+
+/* Inputs */
+input, textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+    margin-bottom: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: 0.3s;
 }
 
+/* Input Focus */
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #61dafb;
+    box-shadow: 0 0 15px rgba(97, 218, 251, 0.5);
+}
+
+/* Custom File Upload */
 input[type="file"] {
-    padding: 3px;
+    padding: 10px;
+    border: 2px dashed #61dafb;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    transition: border-color 0.3s ease-in-out;
+}
+input[type="file"]:hover {
+    border-color: #47c9ff;
 }
 
+/* Buttons */
 button {
-    background-color: #4CAF50;
+    width: 100%;
+    background: linear-gradient(90deg, #1f4068, #5c87b2);
     color: white;
     border: none;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 
+/* Button Hover */
 button:hover {
-    background-color: #45a049;
+    background: linear-gradient(90deg, #1b3358, #4a7ca1);
+    transform: scale(1.05);
 }
 
-footer {
-    margin-top: 50px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    width: 100%;
-    text-align: center;
-}
-
-.error {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-}
-
+/* Back Button */
 .back-btn {
-    background-color: #f44336;
+    background-color: #d9534f;
     color: white;
     text-align: center;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 18px;
+    border-radius: 8px;
     text-decoration: none;
     display: inline-block;
-    margin-top: 15px;
+    margin-top: 20px;
+    transition: 0.3s ease-in-out;
 }
 
 .back-btn:hover {
-    background-color: #e53935;
+    background-color: #c9302c;
+    transform: scale(1.05);
 }
 
-/* Modal Styles */
+/* Success Modal */
 .modal {
     display: none;
     position: fixed;
@@ -96,49 +207,65 @@ footer {
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .modal-content {
-    background-color: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
     margin: 10% auto;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px;
+    border-radius: 12px;
     width: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    animation: slideUp 0.5s ease-in-out forwards;
+    color: black;
 }
 
+/* Modal Heading */
 .modal-content h3 {
-    color: #4CAF50;
+    color: #1f4068;
+    font-size: 24px;
 }
 
+/* Close Button */
 .close-btn {
-    background-color: #f44336;
+    background-color: #d9534f;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 20px;
     margin-top: 20px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 .close-btn:hover {
-    background-color: #e53935;
+    background-color: #c9302c;
+    transform: scale(1.05);
 }
 
-.back-btn {
-    background-color: #f44336;
+/* Footer */
+footer {
+    margin-top: 30px;
+    background: linear-gradient(90deg, #1f4068, #415a77);
     color: white;
+    padding: 12px;
+    width: 100%;
     text-align: center;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 15px;
+    font-size: 14px;
 }
 
-.back-btn:hover {
-    background-color: #e53935;
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); }
+    to { transform: translateY(0); }
 }

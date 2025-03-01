@@ -4,143 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            width: 100%;
-            text-align: center;
-            font-size: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-content {
-            flex: 1;
-        }
-
-        .logout-button {
-            margin-right: 20px;
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .logout-button:hover {
-            background-color: #d32f2f;
-        }
-
-        .container {
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .card {
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            width: 200px;
-            height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s ease-in-out;
-            text-align: center;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .card a {
-            text-decoration: none;
-            color: #4CAF50;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        footer {
-            margin-top: 50px;
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            text-align: center;
-        }
-    </style>
-    <script>
-        function logOut() {
-            // Redirect to login.html (or any logout endpoint)
-            window.location.href = "login.html";
-        }
-    </script>
-</head>
-<body>
-    <header>
-        <div class="header-content">Welcome to Admin Dashboard</div>
-        <button class="logout-button" onclick="logOut()">Log Out</button>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <a href="addFaculty.html">
-                <h3>Add Faculty</h3>
-            </a>
-        </div>
-        <div class="card">
-            <a href="updateFaculty.html">
-                <h3>Update Faculty</h3>
-            </a>
-        </div>
-        <div class="card">
-            <a href="viewFaculty.html">
-                <h3>View Faculty</h3>
-            </a>
-        </div>
-        <div class="card">
-            <a href="deleteFaculty.html">
-                <h3>Delete Faculty</h3>
-            </a>
-        </div>
-        <div class="card">
-            <a href="facultyPerformance.html">
-                <h3>Faculty Performance</h3>
-            </a>
-        </div>
-    </div>
-
-    <footer>
-        Admin Panel | Faculty Feedback System
-    </footer>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
     <script>
         function logOut() {
             // Send a logout request to the backend
@@ -162,6 +28,63 @@
             .catch(error => console.error("Error:", error));
         }
     </script>
-    
+</head>
+<body>
+    <header>
+        <div class="header-content">Welcome to Admin Dashboard</div>
+        <button class="logout-button" onclick="logOut()">Log Out</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <img src="images/add.avif" alt="Add Faculty">
+            <div class="card-content">
+                <i class="fas fa-user-plus icon"></i>
+                <a href="addFaculty.html">
+                    <h3>Add Faculty</h3>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/update.jpg" alt="Update Faculty">
+            <div class="card-content">
+                <i class="fas fa-edit icon"></i>
+                <a href="updateFaculty.html">
+                    <h3>Update Faculty</h3>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/view.jpg" alt="View Faculty">
+            <div class="card-content">
+                <i class="fas fa-eye icon"></i>
+                <a href="viewFaculty.html">
+                    <h3>View Faculty</h3>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/delete.jpeg" alt="Delete Faculty">
+            <div class="card-content">
+                <i class="fas fa-trash-alt icon"></i>
+                <a href="deleteFaculty.html">
+                    <h3>Delete Faculty</h3>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/performance.jpeg" alt="Faculty Performance">
+            <div class="card-content">
+                <i class="fas fa-chart-line icon"></i>
+                <a href="facultyPerformance.html">
+                    <h3>Faculty Performance</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Admin Panel | Faculty Feedback System
+    </footer>
 </body>
 </html>

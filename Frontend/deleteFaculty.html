@@ -8,7 +8,8 @@
 </head>
 <body>
     <header>
-        Delete Faculty
+        <p class="p1">Delete Faculty</p>
+        <p class="p2"><a href="admin.html"><button>Admin Dashboard</button></a></p>
     </header>
 
     <!-- Filter Section -->
@@ -19,8 +20,6 @@
         </select>
         <button onclick="filterBySubject()">Sort by Subject</button>
     </div>
-
-    <!-- Table Section -->
     <div class="table-container">
         <table>
             <thead>
@@ -33,12 +32,9 @@
                 </tr>
             </thead>
             <tbody id="facultyTableBody">
-                <!-- Data will be populated dynamically -->
             </tbody>
         </table>
     </div>
-
-    <a href="admin.html" class="back-btn">Back to Dashboard</a>
 
     <footer>
         Admin Panel | Faculty Feedback System

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .navbar {
+            width: 100%;
+            background: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        .container {
+            margin-top: 20px;
+            width: 80%;
+        }
+        .card {
+            width: 100%;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        .faculty-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .faculty-details img {
+            margin-right: 30px;
+            border-radius: 50%;
+            border: 5px solid #1e3c72;
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+        }
+        .faculty-details div {
+            flex-grow: 1;
+        }
+        .faculty-details p, .faculty-details h4 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #444;
+        }
+        .faculty-details ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+        .faculty-details ul li {
+            background: #f0f4f8;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .btn-custom {
+            background: #1e3c72;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-custom:hover {
+            background: #2a5298;
+            transform: scale(1.05);
+        }
+        .feedback-results {
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .faculty-details {
+                flex-direction: column;
+                text-align: center;
+            }
+            .faculty-details img {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="navbar-brand">Faculty Dashboard</span>
+        <span>Welcome, <span id="facultyName"></span></span>
+        <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <div class="faculty-details">
+                <img id="facultyImage" src="default-avatar.png" alt="Faculty Photo">
+                <div>
+                    <p><strong>Email:</strong> <span id="facultyEmail"></span></p>
+                    <p><strong>ID:</strong> <span id="facultyId"></span></p>
+                    <h4>Subjects Taught:</h4>
+                    <ul id="subjectList"></ul>
+                </div>
+            </div>
+            <button class="btn btn-custom" id="shareEmailBtn">Share via Email</button>
+        </div>
+        <div class="card feedback-results">
+            <h3>Feedback Results</h3>
+            <!-- Add feedback results here -->
+        </div>
+    </div>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    let facultyData = JSON.parse(localStorage.getItem("facultyData"));
+    // 🚨 Prevent access if no facultyData exists
+if (!facultyData) {
+    alert("Unauthorized access! Please log in first.");
+    window.location.href = "login.html";
+    return;
+}
+
+// Prevent navigation to the previous screen without logging out
+if (facultyData) {
+    alert("In order to navigate back, you need to logout first.");
+    
+    // Prevent back navigation
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', function(event) {
+        history.pushState(null, null, location.href);
+        alert("In order to navigate back, you need to logout first.");
+    });
+
+    return;
+}
+    document.getElementById("facultyName").textContent = facultyData.name;
+    document.getElementById("facultyEmail").textContent = facultyData.email;
+    document.getElementById("facultyId").textContent = facultyData.id;
+
+    let photoElement = document.getElementById("facultyImage");
+    if (facultyData.base64Image) {
+        photoElement.src = `data:image/jpeg;base64,${facultyData.base64Image}`;
+    }
+
+    let subjectList = document.getElementById("subjectList");
+    if (facultyData.subjects) {
+        facultyData.subjects.forEach(subject => {
+            let li = document.createElement("li");
+            li.textContent = `${subject.subject} - Semester ${subject.semester}`;
+            subjectList.appendChild(li);
+        });
+    }
+
+});
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    fetch('http://localhost:8080/api/faculty/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (response.ok) {
+            localStorage.removeItem("facultyData");
+            sessionStorage.setItem("logoutSuccess", "true");
+            window.location.href = "login.html";
+        } else {
+            console.error("Logout failed:", response.status);
+        }
+    })
+    .catch(error => {
+        console.error("Error during logout:", error);
+    });
+});
+document.getElementById("shareEmailBtn").addEventListener("click", function () {
+    let facultyData = JSON.parse(localStorage.getItem("facultyData"));
+    if (facultyData) {
+        let emailBody = `Faculty Name: ${facultyData.name}\nEmail: ${facultyData.email}\nID: ${facultyData.id}\nSubjects Taught: ${facultyData.subjects.map(s => `${s.subject} - Semester ${s.semester}`).join(", ")}`;
+        window.location.href = `mailto:?subject=Faculty Details&body=${encodeURIComponent(emailBody)}`;
+    }
+});
+</script>
+</body>
+</html>
