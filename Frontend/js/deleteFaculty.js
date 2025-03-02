@@ -33,8 +33,23 @@ function populateTable(facultyList) {
         nameCell.textContent = faculty.name;
         row.appendChild(nameCell);
 
+        // Add email
+        const emailCell = document.createElement("td");
+        emailCell.textContent = faculty.email || "N/A";
+        row.appendChild(emailCell);
+
+        // Add mobile number
+        const mobileCell = document.createElement("td");
+        mobileCell.textContent = faculty.mobileNumber || "N/A";
+        row.appendChild(mobileCell);
+
+        // Format subjects & semesters correctly
         const subjectsCell = document.createElement("td");
-        subjectsCell.textContent = faculty.subjects.join(", ");
+        if (faculty.subjects && faculty.subjects.length > 0) {
+            subjectsCell.textContent = faculty.subjects.map(s => `${s.subject} (Sem ${s.semester})`).join(", ");
+        } else {
+            subjectsCell.textContent = "N/A";
+        }
         row.appendChild(subjectsCell);
 
         const imageCell = document.createElement("td");
@@ -47,20 +62,36 @@ function populateTable(facultyList) {
         }
         row.appendChild(imageCell);
 
-        const actionCell = document.createElement("td");
+        // Delete Faculty Button
+        const deleteFacultyCell = document.createElement("td");
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.className = "delete-btn";
         deleteButton.onclick = () => confirmDelete(faculty.id, faculty.name);
-        actionCell.appendChild(deleteButton);
-        row.appendChild(actionCell);
+        deleteFacultyCell.appendChild(deleteButton);
+        row.appendChild(deleteFacultyCell);
+
+        // Delete Subject-Semester Button
+        const deleteSubjectSemesterCell = document.createElement("td");
+        const deleteSubSemButton = document.createElement("button");
+        deleteSubSemButton.textContent = "Manage Subjects";
+        deleteSubSemButton.className = "manage-subject-btn";
+        deleteSubSemButton.onclick = () => openSubjectSemesterModal(faculty);
+        deleteSubjectSemesterCell.appendChild(deleteSubSemButton);
+        row.appendChild(deleteSubjectSemesterCell);
 
         tableBody.appendChild(row);
     });
 }
 
 function populateSubjectFilter() {
-    const subjects = new Set(allFaculty.flatMap(faculty => faculty.subjects));
+    const subjects = new Set();
+    allFaculty.forEach(faculty => {
+        faculty.subjects.forEach(subjectObj => {
+            subjects.add(subjectObj.subject); // Extract only subject name
+        });
+    });
+
     const subjectFilter = document.getElementById("subjectFilter");
     subjects.forEach(subject => {
         const option = document.createElement("option");
@@ -73,7 +104,9 @@ function populateSubjectFilter() {
 function filterBySubject() {
     const selectedSubject = document.getElementById("subjectFilter").value;
     const filteredFaculty = selectedSubject
-        ? allFaculty.filter(faculty => faculty.subjects.includes(selectedSubject))
+        ? allFaculty.filter(faculty =>
+            faculty.subjects.some(subjectObj => subjectObj.subject === selectedSubject)
+        )
         : allFaculty;
     populateTable(filteredFaculty);
 }
@@ -105,3 +138,81 @@ async function deleteFaculty(id) {
         alert("An error occurred while deleting the faculty.");
     }
 }
+
+function openSubjectSemesterModal(faculty) {
+    const modal = document.getElementById("subjectSemesterModal");
+    const subjectSemesterList = document.getElementById("subjectSemesterList");
+    const facultyNameDisplay = document.getElementById("facultyName");
+
+    // Set Faculty Name
+    facultyNameDisplay.textContent = `Subjects for ${faculty.name}`;
+
+    // Clear previous entries
+    subjectSemesterList.innerHTML = "";
+
+    // Populate subjects & semesters
+    faculty.subjects.forEach(({ subject, semester }) => {
+        const row = document.createElement("tr");
+
+        const subjectCell = document.createElement("td");
+        subjectCell.textContent = subject;
+        row.appendChild(subjectCell);
+
+        const semesterCell = document.createElement("td");
+        semesterCell.textContent = `Sem ${semester}`;
+        row.appendChild(semesterCell);
+
+        // Delete Button
+        const actionCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-subject-btn";
+        deleteBtn.onclick = () => deleteSubjectSemester(faculty.id, subject, semester);
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+
+        subjectSemesterList.appendChild(row);
+    });
+
+    // Show the modal
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("subjectSemesterModal").style.display = "none";
+}
+
+// Delete Subject-Semester Function
+async function deleteSubjectSemester(facultyId, subject, semester) {
+    const confirmDelete = confirm(`Are you sure you want to delete ${subject} (Sem ${semester})?`);
+    if (!confirmDelete) return;
+
+    try {
+        const response = await fetch(`http://localhost:8080/admin/deleteSubjectSemester/${facultyId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ subject, semester }),
+        });
+
+        if (response.ok) {
+            alert(`Deleted ${subject} (Sem ${semester}) successfully!`);
+            // Refresh faculty list after deletion
+            window.location.reload();  
+        } else {
+            alert("Failed to delete subject-semester.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while deleting the subject-semester.");
+    }
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById("subjectSemesterModal");
+    if (event.target === modal) {
+        closeModal();
+    }
+};

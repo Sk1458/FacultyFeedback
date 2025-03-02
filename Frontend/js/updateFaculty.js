@@ -27,7 +27,7 @@ function populateFacultyTable(facultyList) {
         
         // Make sure 'faculty.subjects' is an array of objects with 'subject' and 'semester'
         const subjectSemesterPairs = faculty.subjects && Array.isArray(faculty.subjects)
-            ? faculty.subjects.map(subject => `${subject.subject} - ${subject.semester}`).join(", ")
+            ? faculty.subjects.map(entry => `${entry.subject || 'N/A'} - ${entry.semester || 'N/A'}`).join(", ")
             : "No subjects";  // Handle case where there are no subjects
         
         row.innerHTML = `
@@ -52,18 +52,56 @@ function populateFacultyTable(facultyList) {
 function openUpdateForm(facultyId) {
     selectedFacultyId = facultyId;
 
-    // Set the faculty ID header
-    const facultyIdHeader = document.getElementById("facultyIdHeader");
-    facultyIdHeader.textContent = `Updating Faculty ID: ${facultyId}`;
+    document.getElementById("facultyIdHeader").textContent = `Updating Faculty ID: ${facultyId}`;
+
+    // Reset the form fields to keep them empty
+    document.getElementById("updateFacultyForm").reset();
+    document.getElementById("updateSubjectsContainer").innerHTML = ""; 
+
+    // const container = document.getElementById("updateSubjectsContainer");
+    // container.innerHTML = ""; // Clear existing entries
+
+    // Load existing subjects into the form
+    // subjects.forEach(entry => {
+    //     addSubjectField(entry.subject, entry.semester);
+    // });
 
     document.getElementById("updateForm").style.display = "block";
+
 }
 
 // Close the update form
 function closeUpdateForm() {
     document.getElementById("updateFacultyForm").reset();
+    document.getElementById("updateSubjectsContainer").innerHTML = "";
     document.getElementById("updateForm").style.display = "none";
 }
+
+// Function to add a subject-semester pair
+function addSubjectField(subject = "", semester = "") {
+    const container = document.getElementById("updateSubjectsContainer");
+
+    const subjectDiv = document.createElement("div");
+    subjectDiv.classList.add("subject-pair");
+
+    subjectDiv.innerHTML = `
+        <input type="text" placeholder="Subject" class="subject-input" value="${subject}">
+        <input type="number" placeholder="Semester" class="semester-input" min="1" value="${semester}">
+        <button type="button" class="remove-subject-btn">Remove</button>
+    `;
+
+    container.appendChild(subjectDiv);
+
+    // Add event listener to remove button
+    subjectDiv.querySelector(".remove-subject-btn").addEventListener("click", function () {
+        container.removeChild(subjectDiv);
+    });
+}
+
+// Add new subject-semester pair dynamically
+document.getElementById("addSubjectButton").addEventListener("click", function () {
+    addSubjectField();
+});
 
 // Submit updates
 document.getElementById("updateFacultyForm").onsubmit = async function (event) {
@@ -71,15 +109,38 @@ document.getElementById("updateFacultyForm").onsubmit = async function (event) {
 
     const formData = new FormData();
     formData.append("id", selectedFacultyId);
+
     const name = document.getElementById("updateName").value.trim();
     if (name) formData.append("name", name);
-    const addSubjects = document.getElementById("updateAddSubjects").value.trim();
-    if (addSubjects) formData.append("addSubjects", addSubjects.split(",").map(s => s.trim()));
-    const removeSubjects = document.getElementById("updateRemoveSubjects").value.trim();
-    if (removeSubjects) formData.append("removeSubjects", removeSubjects.split(",").map(s => s.trim()));
+
+    const mobileNumber = document.getElementById("updateMobileNumber").value.trim();
+    if (mobileNumber) formData.append("mobileNumber", mobileNumber);
+
+    const email = document.getElementById("updateEmail").value.trim();
+    if (email) formData.append("email", email);
+
     const image = document.getElementById("updateImage").files[0];
     if (image) formData.append("image", image);
 
+
+    // Collect subjects and semesters
+    const subjectsArray = [];
+    document.querySelectorAll(".subject-pair").forEach(pair => {
+        const subject = pair.querySelector(".subject-input").value.trim();
+        const semester = pair.querySelector(".semester-input").value.trim();
+
+        if (subject && semester) {
+            subjectsArray.push({ subject, semester: parseInt(semester) });
+        }
+    });
+
+    if (subjectsArray.length > 0) {
+        formData.append("subjectsJson", JSON.stringify(subjectsArray)); // Send as JSON string
+    }
+
+    // ✅ Log to check what is being sent
+    console.log("Final Data Being Sent:", Object.fromEntries(formData));
+    
     try {
         const response = await fetch("http://localhost:8080/admin/updateFaculty", {
             method: "PUT",

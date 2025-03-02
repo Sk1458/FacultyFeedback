@@ -36,8 +36,23 @@ function populateTable(data) {
         nameCell.textContent = faculty.name;
         row.appendChild(nameCell);
 
+        const emailCell = document.createElement("td");
+        emailCell.textContent = faculty.email ? faculty.email : "N/A";
+        row.appendChild(emailCell);
+
+        const mobileCell = document.createElement("td");
+        mobileCell.textContent = faculty.mobileNumber ? faculty.mobileNumber : "N/A";
+        row.appendChild(mobileCell);
+
+        // Subjects (Show subject-semester pairs)
         const subjectsCell = document.createElement("td");
-        subjectsCell.textContent = faculty.subjects.join(", ");
+        if (faculty.subjects && Array.isArray(faculty.subjects)) {
+            subjectsCell.textContent = faculty.subjects
+                .map(entry => `${entry.subject} - Semester ${entry.semester}`)
+                .join(", ");
+        } else {
+            subjectsCell.textContent = "No subjects assigned";
+        }
         row.appendChild(subjectsCell);
 
         const imageCell = document.createElement("td");
@@ -57,29 +72,38 @@ function populateTable(data) {
 // Populate dropdown with unique subjects
 function populateSubjectDropdown(data) {
     const subjectFilter = document.getElementById("subjectFilter");
-    const uniqueSubjects = new Set();
+    const uniqueSubjectSemesters = new Set();
 
     data.forEach(faculty => {
-        faculty.subjects.forEach(subject => uniqueSubjects.add(subject));
+        faculty.subjects.forEach(entry => {
+            const subjectSemesterPair = `${entry.subject} - Semester ${entry.semester}`;
+            uniqueSubjectSemesters.add(subjectSemesterPair);
+        });
     });
 
-    uniqueSubjects.forEach(subject => {
+    // Clear previous options
+    subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+
+    uniqueSubjectSemesters.forEach(pair => {
         const option = document.createElement("option");
-        option.value = subject;
-        option.textContent = subject;
+        option.value = pair;  // Store "Math - Semester 3"
+        option.textContent = pair;
         subjectFilter.appendChild(option);
     });
 }
 
-// Filter faculty by subject
+// Filter faculty by subject and semester
 function filterFacultyBySubject() {
-    const selectedSubject = document.getElementById("subjectFilter").value;
+    const selectedValue = document.getElementById("subjectFilter").value;
 
-    if (selectedSubject === "") {
-        populateTable(facultyList); // Show all if no subject is selected
+    if (selectedValue === "") {
+        populateTable(facultyList); // Show all faculty if no filter is applied
     } else {
+        const [selectedSubject, selectedSemester] = selectedValue.split(" - Semester ");
         const filteredList = facultyList.filter(faculty =>
-            faculty.subjects.includes(selectedSubject)
+            faculty.subjects.some(entry => 
+                entry.subject === selectedSubject && entry.semester == selectedSemester
+            )
         );
         populateTable(filteredList);
     }

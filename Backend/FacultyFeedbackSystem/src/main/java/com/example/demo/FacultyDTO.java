@@ -6,7 +6,7 @@ public class FacultyDTO {
 	
 	private int id;
 	private String name;
-	private List<String> subjects;
+	private List<FacultySubject> subjects;
 	private String base64Image;
 	private String mobileNumber;
 	private String email;
@@ -24,10 +24,10 @@ public class FacultyDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<String> getSubjects() {
+	public List<FacultySubject> getSubjects() {
 		return subjects;
 	}
-	public void setSubjects(List<String> subjects) {
+	public void setSubjects(List<FacultySubject> subjects) {
 		this.subjects = subjects;
 	}
 	public String getBase64Image() {
@@ -48,7 +48,7 @@ public class FacultyDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public FacultyDTO(int id, String name, List<String> subjects, String base64Image, String mobileNumber,
+	public FacultyDTO(int id, String name, List<FacultySubject> subjects, String base64Image, String mobileNumber,
 			String email) {
 		super();
 		this.id = id;

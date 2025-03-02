@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,13 +46,19 @@ public class FacultyController {
 		try {
 	        List<FacultyData> facultyList = facultyRepo.findAll();
 	        List<FacultyDTO> facultyDTOList = facultyList.stream().map(faculty -> {
-	            List<String> subjectNames = faculty.getSubjects().stream()
-	                .map(FacultySubject::getSubject)
-	                .collect(Collectors.toList());
+	            List<FacultySubject> subjects = new ArrayList<>(faculty.getSubjects()); // Get subject-semester pairs
 
-	            String base64Image = faculty.getImage() != null ? Base64.getEncoder().encodeToString(faculty.getImage()) : null;
-	            //return new FacultyDTO(faculty.getId(), faculty.getName(), subjectNames, base64Image);
-	            return new FacultyDTO(faculty.getId(), faculty.getName(), subjectNames, base64Image, faculty.getMobileNumber(), faculty.getEmail());
+	            String base64Image = faculty.getImage() != null ? 
+	                Base64.getEncoder().encodeToString(faculty.getImage()) : null;
+
+	            return new FacultyDTO(
+	                faculty.getId(), 
+	                faculty.getName(), 
+	                subjects, // Now sending subject-semester pairs instead of only names
+	                base64Image, 
+	                faculty.getMobileNumber(), 
+	                faculty.getEmail()
+	            );
 	        }).collect(Collectors.toList());
 
 	        return ResponseEntity.ok(facultyDTOList);
@@ -124,9 +132,29 @@ public class FacultyController {
 	            faculty.setEmail(email);
 	        }
 	        if (subjectsJson != null && !subjectsJson.isEmpty()) {
+	        	System.out.printf("Received subjectsJson: {}", subjectsJson);
+	        	
 	            ObjectMapper objectMapper = new ObjectMapper();
 	            List<FacultySubject> updatedSubjects = objectMapper.readValue(subjectsJson, new TypeReference<List<FacultySubject>>() {});
-	            faculty.setSubjects(updatedSubjects);
+	            
+	         // Update subject-semester pairs according to the new rules
+	            List<FacultySubject> existingSubjects = faculty.getSubjects();
+	            Map<Integer, FacultySubject> semesterToSubjectMap = existingSubjects.stream()
+	                    .collect(Collectors.toMap(FacultySubject::getSemester, sub -> sub));
+	            
+	            
+	            for (FacultySubject updatedSubject : updatedSubjects) {
+	                if (updatedSubject.getSubject() == null || updatedSubject.getSubject().isEmpty()) {
+	                    // If the subject is empty, it means removal
+	                    semesterToSubjectMap.remove(updatedSubject.getSemester());
+	                } else {
+	                    // Replace or add new subject-semester entry
+	                    semesterToSubjectMap.put(updatedSubject.getSemester(), updatedSubject);
+	                }
+	            }
+	            
+	            // Update faculty subjects with modified subject-semester list
+	            faculty.setSubjects(new ArrayList<>(semesterToSubjectMap.values()));
 	        }
 	        if (image != null && image.getSize() > 0) {
 	            faculty.setImage(image.getBytes());
@@ -169,6 +197,61 @@ public class FacultyController {
 		}
 		
 	}
+	
+	@DeleteMapping("/admin/deleteFacultySubject/{facultyId}/{subject}/{semester}")
+	public ResponseEntity<String> deleteFacultySubject(
+	        @PathVariable int facultyId,
+	        @PathVariable String subject,
+	        @PathVariable int semester) {
+
+	    logger.warn("Delete Subject-Semester Pair Request Received for Faculty ID = {}", facultyId);
+
+	    try {
+	        Optional<FacultyData> optionalFaculty = facultyRepo.findById(facultyId);
+	        if (optionalFaculty.isPresent()) {
+	            FacultyData faculty = optionalFaculty.get();
+
+	            // Remove the subject-semester pair
+	            List<FacultySubject> updatedSubjects = faculty.getSubjects().stream()
+	                .filter(sub -> !(sub.getSubject().equals(subject) && sub.getSemester() == semester))
+	                .collect(Collectors.toList());
+
+	            // If the list remains the same, the subject-semester pair was not found
+	            if (updatedSubjects.size() == faculty.getSubjects().size()) {
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject-Semester pair not found.");
+	            }
+
+	            faculty.setSubjects(updatedSubjects); // Update faculty subjects
+	            facultyRepo.save(faculty); // Save the updated faculty entry
+
+	            logger.warn("Admin successfully removed Subject '{}' (Semester {}) for Faculty ID = {}", subject, semester, facultyId);
+	            return ResponseEntity.ok("Subject-Semester pair deleted successfully!");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found.");
+	        }
+	    } catch (Exception e) {
+	        logger.warn("Error while deleting subject-semester pair for Faculty ID = {}, Error: {}", facultyId, e.toString());
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+	    }
+	}
+	
+	@DeleteMapping("/admin/deleteSubjectSemester/{facultyId}")
+	public ResponseEntity<String> deleteSubjectSemester(@PathVariable int facultyId, @RequestBody Map<String, Object> requestData) {
+	    String subject = (String) requestData.get("subject");
+	    Integer semester = (Integer) requestData.get("semester");
+
+	    Optional<FacultyData> facultyOpt = facultyRepo.findById(facultyId);
+	    if (facultyOpt.isPresent()) {
+	        FacultyData faculty = facultyOpt.get();
+	        faculty.getSubjects().removeIf(sub -> sub.getSubject().equals(subject) && sub.getSemester().equals(semester));
+	        facultyRepo.save(faculty);
+	        return ResponseEntity.ok("Subject-Semester deleted successfully.");
+	    }
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found.");
+	}
+
+
 	
 	
 	@GetMapping("/admin/viewFacultyPerformance")

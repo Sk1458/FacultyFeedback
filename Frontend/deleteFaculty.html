@@ -26,14 +26,37 @@
                 <tr>
                     <th>Faculty ID</th>
                     <th>Name</th>
-                    <th>Subjects</th>
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>Subjects & Semesters</th>
                     <th>Image</th>
-                    <th>Action</th>
+                    <th>Delete Faculty</th>
+                    <th>Delete Subject-Semester</th>
                 </tr>
             </thead>
             <tbody id="facultyTableBody">
             </tbody>
         </table>
+    </div>
+
+    <!-- Modal for Deleting Subject-Semester -->
+    <div id="subjectSemesterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Delete Subject-Semester</h2>
+            <p id="facultyName"></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Semester</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectSemesterList">
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <footer>
