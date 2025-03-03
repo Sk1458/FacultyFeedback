@@ -14,7 +14,6 @@
         <div class="faculty-details">
             <p><strong>Faculty ID:</strong> <span id="facultyId"></span></p>
             <p><strong>Name:</strong> <span id="facultyName"></span></p>
-            <p><strong>Subjects:</strong> <span id="facultySubjects"></span></p>
             <p><strong>Image:</strong> <img id="facultyImage" width="100" alt="Faculty Image"></p>
         </div>
 
@@ -27,57 +26,26 @@
                 <input type="number" id="currentSemester" min="1" max="8" required>
 
                 <label for="selectSubject">Select Subject:</label>
-                <select id="selectSubject" required>
-                    <!-- Options will be populated dynamically -->
-                </select>
+                <select id="selectSubject" required></select>
 
-                <label for="regularityToClass">Regularity to Class:</label>
-                <select id="regularityToClass" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <!-- Feedback Questions with Comment Boxes -->
+                <label for="regularity">Regularity to Class:</label>
+                <textarea id="regularity" rows="3" required></textarea>
 
                 <label for="knowledgeDepth">Knowledge Depth:</label>
-                <select id="knowledgeDepth" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <textarea id="knowledgeDepth" rows="3" required></textarea>
 
                 <label for="communication">Communication:</label>
-                <select id="communication" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <textarea id="communication" rows="3" required></textarea>
 
                 <label for="engagement">Engagement:</label>
-                <select id="engagement" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <textarea id="engagement" rows="3" required></textarea>
 
                 <label for="explanationQuality">Explanation Quality:</label>
-                <select id="explanationQuality" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <textarea id="explanationQuality" rows="3" required></textarea>
 
                 <label for="overallPerformance">Overall Performance:</label>
-                <select id="overallPerformance" required>
-                    <option value="very bad">Very Bad</option>
-                    <option value="bad">Bad</option>
-                    <option value="good">Good</option>
-                    <option value="very good">Very Good</option>
-                </select>
+                <textarea id="overallPerformance" rows="3" required></textarea>
 
                 <label for="additionalComments">Additional Comments:</label>
                 <textarea id="additionalComments" rows="4"></textarea>

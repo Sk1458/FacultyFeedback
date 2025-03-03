@@ -159,20 +159,17 @@
         </div>
     </nav>
 
-    <div class="content-container">
-        <div class="container">
-            <!-- Student Registration Form -->
+            <!-- Admin Registration Form -->
             <div class="form-container">
-                <h1>Register as Student</h1>
-                <form action="registerStudentAction.html" method="POST">
+                <h1>Register as Admin</h1>
+                <form action="" method="POST">
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="studentUsername" name="username" placeholder="enter your university Rollnumber ex:21MH1A05B5" required>
+                        <input type="text" class="form-control" id="AdminUsername" name="username" placeholder="enter admin id" required>
                     </div>
-
                     <div class="mb-3">
                         <div class="input-group">
-                            <input type="password" class="form-control" id="studentPassword" name="password" placeholder="create password" required>
-                            <button type="button" class="btn btn-outline-secondary" id="toggleStudentPassword" onclick="togglePassword('studentPassword')">
+                            <input type="password" class="form-control" id="adminPassword" name="password" placeholder="create password" required>
+                            <button type="button" class="btn btn-outline-secondary" id="toggleadminPassword" onclick="togglePassword('adminPassword')">
                                 Show
                             </button>
                         </div>
@@ -180,49 +177,17 @@
 
                     <div class="mb-3">
                         <div class="input-group">
-                            <input type="password" class="form-control" id="studentConfirmPassword" name="confirmPassword" placeholder="confirmPassword" required>
-                            <button type="button" class="btn btn-outline-secondary" id="toggleStudentConfirmPassword" onclick="togglePassword('studentConfirmPassword')">
+                            <input type="password" class="form-control" id="amdinConfirmPassword" name="confirmPassword" placeholder="confirm password" required>
+                            <button type="button" class="btn btn-outline-secondary" id="toggleadminConfirmPassword" onclick="togglePassword('adminConfirmPassword')">
                                 Show
                             </button>
                         </div>
                     </div>
                     <div class="register-link">
-                        already registered? <a href="student.html">login now</a>
+                        already registered? <a href="admin-login.html">login now</a>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-register">Register as Student</button>
-                </form>
-            </div>
-
-            <!-- Faculty Registration Form -->
-            <div class="form-container">
-                <h1>Register as Faculty</h1>
-                <form action="registerFacultyAction.html" method="POST">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="facultyUsername" name="username" placeholder="enter faculty id" required>
-                    </div>
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="facultyPassword" name="password" placeholder="create password" required>
-                            <button type="button" class="btn btn-outline-secondary" id="toggleFacultyPassword" onclick="togglePassword('facultyPassword')">
-                                Show
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="facultyConfirmPassword" name="confirmPassword" placeholder="confirm password" required>
-                            <button type="button" class="btn btn-outline-secondary" id="toggleFacultyConfirmPassword" onclick="togglePassword('facultyConfirmPassword')">
-                                Show
-                            </button>
-                        </div>
-                    </div>
-                    <div class="register-link">
-                        already registered? <a href="faculty.html">login now</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-register">Register as Faculty</button>
+                    <button type="submit" class="btn btn-primary btn-register">Register as Admin</button>
                 </form>
             </div>
         </div>

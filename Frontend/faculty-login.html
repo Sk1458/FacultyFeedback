@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
                     <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
@@ -31,59 +31,28 @@
     <div class="content-container">
         <div class="container">
             <h1>Faculty Login</h1>
-            <form id="loginForm" action="loginAction.html" method="POST">
+            <form id="faculty-login-form" onsubmit="validateFacultyLogin(event)">
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="enter Faculty Id" required>
+                    <input type="text" class="form-control" id="faculty-id" name="username" placeholder="enter Faculty Id" required>
                 </div>
-
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="password" class="form-control" id="password" name="password" placeholder="enter your password" required>
                         <button type="button" class="btn btn-outline-secondary" id="togglePassword">Show</button>
                     </div>
                 </div>
+
                 <button type="submit" class="btn btn-primary btn-login">Login</button>
             </form>
             <div class="register-link">
-                Not registered? <a href="register.html">Register now</a>
+                Forgot Password? <a href="resetPassword.html">Reset now</a>
+                <div id="faculty-error-message" class="text-danger mt-2"></div>
             </div>
-            <p id="errorMessage" style="color: red; display: none;">Invalid credentials! Please try again.</p>
         </div>
     </div>
-    <script src="js/login.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
- document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+    <script src="/js/faculty-login.js"></script>
 
-    let email = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-
-    try {
-        const response = await fetch("http://localhost:8080/api/faculty/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: email, password: password })
-        });
-
-        const responseText = await response.text();
-        console.log("Server Response:", responseText); // ✅ Log response
-
-        if (response.ok) {
-            const facultyData = JSON.parse(responseText);
-            localStorage.setItem("facultyData", JSON.stringify(facultyData));
-            window.location.href = "dashboard.html"; // Redirect on success
-        } else {
-            document.getElementById("errorMessage").style.display = "block";
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-    
-});
- 
-
-    </script>
 </body>
 </html>
 

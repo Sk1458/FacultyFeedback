@@ -14,36 +14,40 @@ public class FeedbackEntry {
 
     @Column
     private String regularity;
+    @Column
+    private String regularitySentiment;
 
     @Column
     private String knowledgeDepth;
+    @Column
+    private String knowledgeDepthSentiment;
 
     @Column
     private String communication;
+    @Column
+    private String communicationSentiment;
 
     @Column
     private String engagement;
+    @Column
+    private String engagementSentiment;
 
     @Column
     private String explanationQuality;
+    @Column
+    private String explanationQualitySentiment;
 
     @Column
     private String overallPerformance;
+    @Column
+    private String overallPerformanceSentiment;
 
     @Column
     private String additionalComments;
-    
     @Column
-    private String analysisResult;
+    private String additionalCommentsSentiment;
 
-	public String getAnalysisResult() {
-		return analysisResult;
-	}
-
-	public void setAnalysisResult(String analysisResult) {
-		this.analysisResult = analysisResult;
-	}
-
+    
 	public String getSubject() {
 		return subject;
 	}
@@ -115,24 +119,92 @@ public class FeedbackEntry {
 	public void setAdditionalComments(String additionalComments) {
 		this.additionalComments = additionalComments;
 	}
+	
+	
+	public String getRegularitySentiment() {
+		return regularitySentiment;
+	}
 
-	public FeedbackEntry(String subject, int semester, String regularity, String knowledgeDepth, String communication,
-			String engagement, String explanationQuality, String overallPerformance, String additionalComments) {
+	public void setRegularitySentiment(String regularitySentiment) {
+		this.regularitySentiment = regularitySentiment;
+	}
+
+	public String getKnowledgeDepthSentiment() {
+		return knowledgeDepthSentiment;
+	}
+
+	public void setKnowledgeDepthSentiment(String knowledgeDepthSentiment) {
+		this.knowledgeDepthSentiment = knowledgeDepthSentiment;
+	}
+
+	public String getCommunicationSentiment() {
+		return communicationSentiment;
+	}
+
+	public void setCommunicationSentiment(String communicationSentiment) {
+		this.communicationSentiment = communicationSentiment;
+	}
+
+	public String getEngagementSentiment() {
+		return engagementSentiment;
+	}
+
+	public void setEngagementSentiment(String engagementSentiment) {
+		this.engagementSentiment = engagementSentiment;
+	}
+
+	public String getExplanationQualitySentiment() {
+		return explanationQualitySentiment;
+	}
+
+	public void setExplanationQualitySentiment(String explanationQualitySentiment) {
+		this.explanationQualitySentiment = explanationQualitySentiment;
+	}
+
+	public String getOverallPerformanceSentiment() {
+		return overallPerformanceSentiment;
+	}
+
+	public void setOverallPerformanceSentiment(String overallPerformanceSentiment) {
+		this.overallPerformanceSentiment = overallPerformanceSentiment;
+	}
+
+	public String getAdditionalCommentsSentiment() {
+		return additionalCommentsSentiment;
+	}
+
+	public void setAdditionalCommentsSentiment(String additionalCommentsSentiment) {
+		this.additionalCommentsSentiment = additionalCommentsSentiment;
+	}
+
+	public FeedbackEntry(String subject, int semester, String regularity, String regularitySentiment,
+			String knowledgeDepth, String knowledgeDepthSentiment, String communication, String communicationSentiment,
+			String engagement, String engagementSentiment, String explanationQuality,
+			String explanationQualitySentiment, String overallPerformance, String overallPerformanceSentiment,
+			String additionalComments, String additionalCommentsSentiment) {
 		super();
 		this.subject = subject;
 		this.semester = semester;
 		this.regularity = regularity;
+		this.regularitySentiment = regularitySentiment;
 		this.knowledgeDepth = knowledgeDepth;
+		this.knowledgeDepthSentiment = knowledgeDepthSentiment;
 		this.communication = communication;
+		this.communicationSentiment = communicationSentiment;
 		this.engagement = engagement;
+		this.engagementSentiment = engagementSentiment;
 		this.explanationQuality = explanationQuality;
+		this.explanationQualitySentiment = explanationQualitySentiment;
 		this.overallPerformance = overallPerformance;
+		this.overallPerformanceSentiment = overallPerformanceSentiment;
 		this.additionalComments = additionalComments;
+		this.additionalCommentsSentiment = additionalCommentsSentiment;
 	}
-
+	
 	public FeedbackEntry() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 
 }

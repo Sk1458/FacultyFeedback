@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,9 @@ public class FacultyController {
 	
 	@Autowired
     FacultyRepository facultyRepo;
+	
+	@Autowired
+	BCryptPasswordEncoder encoder;
 	
 	@GetMapping("/admin/viewFaculty")
     public ResponseEntity<List<FacultyDTO>> viewAllFaculty() {
@@ -89,9 +93,13 @@ public class FacultyController {
 	        List<FacultySubject> subjects = objectMapper.readValue(subjectsJson, new TypeReference<List<FacultySubject>>() {});
 
 	        byte[] imageData = (image != null && !image.isEmpty()) ? image.getBytes() : null;
+	        
+	        // Encrypt the default password
+	        String encryptedPassword = encoder.encode("faculty@123");
+	        
+	        
 
-	        //FacultyData faculty = new FacultyData(id, name, subjects, imageData);
-	        FacultyData faculty = new FacultyData(id, name, subjects, new ArrayList<>(), mobileNumber, email, imageData, null);
+	        FacultyData faculty = new FacultyData(id, name, subjects, new ArrayList<>(), mobileNumber, email, imageData, encryptedPassword);
 	        facultyRepo.save(faculty);
 
 	        logger.info("Admin Successfully Added Faculty with ID = {}", id);

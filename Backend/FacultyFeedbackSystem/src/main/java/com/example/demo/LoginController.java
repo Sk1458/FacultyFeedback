@@ -23,6 +23,9 @@ public class LoginController {
 	
 	@Autowired
 	StudentCredentialsRepository studentRepo;
+	
+	@Autowired
+	FacultyRepository facultyRepo;
 	 
 	@PostMapping("/admin/validate")
     public boolean validateAdmin(@RequestBody Admin loginDetails) {
@@ -88,5 +91,42 @@ public class LoginController {
         logger.info("Student logged out successfully.");
         return "Logout successful";
     }
+    
+    @PostMapping("/faculty/validate")
+    public boolean validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
+        String username = loginDetails.getUsername();
+        FacultyData storedFaculty = null;
+
+        // Check if username is a number (faculty ID)
+        if (username.matches("\\d+")) { 
+            storedFaculty = facultyRepo.findById(Integer.parseInt(username)).orElse(null);
+        }
+
+        // If not found by ID, check mobile number and email
+        if (storedFaculty == null) {
+            storedFaculty = facultyRepo.findByMobileNumber(username).orElse(null);
+        }
+        if (storedFaculty == null) {
+            storedFaculty = facultyRepo.findByEmail(username).orElse(null);
+        }
+
+        if (storedFaculty != null) {
+            // Validate the password
+            boolean match = encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword());
+            if (match) {
+                logger.info("Faculty Successfully Logged In");
+                return true;
+            } else {
+                logger.warn("Faculty Entered Incorrect password");
+                return false;
+            }
+        }
+
+        logger.warn("Faculty Not Found");
+        return false;
+    }
+
+
+    
     
 }

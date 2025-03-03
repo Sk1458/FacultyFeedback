@@ -2,6 +2,8 @@ package com.example.demo;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -50,7 +52,9 @@ public class FacultyData {
 	@Transient
     private String base64Image;
 	
-
+	@JsonIgnore
+	private String password;
+	
 
 	public int getId() {
 		return id;
@@ -115,10 +119,18 @@ public class FacultyData {
 	public void setFeedbacks(List<FeedbackEntry> feedbacks) {
 		this.feedbacks = feedbacks;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public FacultyData(int id, String name, List<FacultySubject> subjects, List<FeedbackEntry> feedbacks,
 			@Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits") String mobileNumber,
-			@Email(message = "Invalid email format") String email, byte[] image, String base64Image) {
+			@Email(message = "Invalid email format") String email, byte[] image, String password) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -126,23 +138,13 @@ public class FacultyData {
 		this.mobileNumber = mobileNumber;
 		this.email = email;
 		this.image = image;
+		this.password = password;
 	}
-
-//	public FacultyData(int id, String name, List<FacultySubject> subjects, byte[] image) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.subjects = subjects;
-//		this.image = image;
-//	}
 	
 	public FacultyData() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-
-
 	
 	
 }

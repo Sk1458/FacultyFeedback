@@ -18,11 +18,10 @@ async function loadFacultyDetails() {
         document.getElementById('facultyImage').src = `data:image/jpeg;base64,${faculty.base64Image}`;
 
         // Store faculty subjects and semesters
-        facultySubjects = faculty.subjects; // Assuming subjects contain { name, semester } structure
+        facultySubjects = faculty.subjects; 
 
         // Log subjects to verify they're coming correctly
-        console.log('Faculty Subjects:', faculty.subjects);  // Added this log
-
+        console.log('Faculty Subjects:', faculty.subjects);
     } catch (error) {
         console.error('Error loading faculty details:', error);
         alert('Error loading faculty details: ' + error.message);
@@ -47,14 +46,60 @@ function updateSubjectDropdown() {
     // Add filtered subjects to the dropdown
     filteredSubjects.forEach(subject => {
         const option = document.createElement('option');
-        option.value = subject.subject;  // Fix: Using 'subject' instead of 'name'
-        option.textContent = subject.subject;  // Fix: Correct property
+        option.value = subject.subject;
+        option.textContent = subject.subject;
         selectSubject.appendChild(option);
     });
 }
 
 // Add event listener for semester selection
 document.getElementById('currentSemester').addEventListener('change', updateSubjectDropdown);
+
+// Handle feedback form submission
+feedbackForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const selectedSubject = document.getElementById('selectSubject').value;
+    if (!selectedSubject) {
+        alert("Please select a subject.");
+        return;
+    }
+
+    const feedbackData = {
+        facultyId: parseInt(facultyId, 10),
+        subject: selectedSubject,
+        semester: parseInt(document.getElementById('currentSemester').value, 10),
+        regularity: document.getElementById('regularity').value,
+        knowledgeDepth: document.getElementById('knowledgeDepth').value,
+        communication: document.getElementById('communication').value,
+        engagement: document.getElementById('engagement').value,
+        explanationQuality: document.getElementById('explanationQuality').value,
+        overallPerformance: document.getElementById('overallPerformance').value,
+        additionalComments: document.getElementById('additionalComments').value
+    };
+
+    console.log("Submitting Feedback Data:", feedbackData); // Debugging log
+
+    try {
+        const response = await fetch("http://localhost:8080/student/submitFeedback?facultyId=" + facultyId, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(feedbackData)
+        });
+
+        if (response.ok) {
+            alert("Feedback submitted successfully!");
+            window.location.href = "feedback.html"; // Redirect to faculty list
+        } else {
+            alert("Failed to submit feedback.");
+        }
+    } catch (error) {
+        console.error("Error submitting feedback:", error);
+        alert("An error occurred while submitting feedback.");
+    }
+});
 
 // Load faculty details when the page is loaded
 document.addEventListener('DOMContentLoaded', loadFacultyDetails);

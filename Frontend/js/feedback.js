@@ -25,10 +25,14 @@ function populateFacultyTable(facultyList) {
     facultyList.forEach(faculty => {
         const row = document.createElement("tr");
 
+        // Format subjects with semesters
+        const subjectSemesterPairs = faculty.subjects.map(sub => `${sub.subject} (Sem ${sub.semester})`).join(", ");
+
+
         row.innerHTML = `
             <td>${faculty.id}</td>
             <td>${faculty.name}</td>
-            <td>${faculty.subjects.join(", ")}</td>
+            <td>${subjectSemesterPairs}</td>
             <td>
                 ${faculty.base64Image ? `<img src="data:image/jpeg;base64,${faculty.base64Image}" alt="${faculty.name}" width="50">` : "No Image"}
             </td>
@@ -48,7 +52,7 @@ function redirectToFeedbackPage(facultyId) {
 
 // Redirect to login page
 function logout() {
-    window.location.href = "login.html"; // Replace "login.html" with the actual login page URL
+    window.location.href = "loginPage.html"; // Replace "login.html" with the actual login page URL
 }
 
 // Initial load
