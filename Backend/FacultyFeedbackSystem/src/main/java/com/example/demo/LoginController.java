@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,31 +29,25 @@ public class LoginController {
 	
 	@Autowired
 	FacultyRepository facultyRepo;
+	
+	@Autowired
+	JwtUtil jwtUtil;
 	 
 	@PostMapping("/admin/validate")
-    public boolean validateAdmin(@RequestBody Admin loginDetails) {
-		
-
-        // Fetch admin credentials from the database
+    public Map<String, String> validateAdmin(@RequestBody Admin loginDetails) {
+        Map<String, String> response = new HashMap<>();
         Admin storedAdmin = adminRepo.findById(loginDetails.getUsername()).orElse(null);
 
-        if (storedAdmin != null) {
-        	
-            // Validate the password
-            boolean match = encoder.matches(loginDetails.getPassword(), storedAdmin.getPassword()); 
-            if(match) {
-            	
-            	logger.info("Admin Successfully Logged In");
-            	return true;
-            }
-            else {
-            	logger.warn("Admin Entered Incorrect password");
-            	return false;
-            }
+        if (storedAdmin != null && encoder.matches(loginDetails.getPassword(), storedAdmin.getPassword())) {
+            logger.info("Admin Successfully Logged In");
+            String token = jwtUtil.generateToken(loginDetails.getUsername());
+            response.put("token", token);
+            return response;
         }
-        
-        logger.warn("Admin Entered Incorrect Username");
-        return false; 
+
+        logger.warn("Invalid Admin Credentials");
+        response.put("error", "Invalid credentials");
+        return response;
     }
 	 
     @PostMapping("/admin/logout")
@@ -61,28 +58,20 @@ public class LoginController {
     }
     
     @PostMapping("/student/validate")
-    public boolean validateStudent(@RequestBody StudentCredentials loginDetails) {
-    	
-    	// Fetch admin credentials from the database
-    	StudentCredentials storedStudent= studentRepo.findById(loginDetails.getStudentId()).orElse(null);
+    public Map<String, String> validateStudent(@RequestBody StudentCredentials loginDetails) {
+        Map<String, String> response = new HashMap<>();
+        StudentCredentials storedStudent = studentRepo.findById(loginDetails.getStudentId()).orElse(null);
 
-        if (storedStudent != null) {
-        	
-            // Validate the password
-            boolean match = encoder.matches(loginDetails.getPassword(), storedStudent.getPassword()); 
-            if(match) {
-            	
-            	logger.info("Student Successfully Logged In");
-            	return true;
-            }
-            else {
-            	logger.warn("Student Entered Incorrect password");
-            	return false;
-            }
+        if (storedStudent != null && encoder.matches(loginDetails.getPassword(), storedStudent.getPassword())) {
+            logger.info("Student Successfully Logged In");
+            String token = jwtUtil.generateToken(loginDetails.getStudentId());
+            response.put("token", token);
+            return response;
         }
-        
-        logger.warn("Student Entered Incorrect Username");
-        return false;	
+
+        logger.warn("Invalid Student Credentials");
+        response.put("error", "Invalid credentials");
+        return response;
     }
     
     @PostMapping("/student/logout")
@@ -93,16 +82,14 @@ public class LoginController {
     }
     
     @PostMapping("/faculty/validate")
-    public boolean validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
+    public Map<String, String> validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
+        Map<String, String> response = new HashMap<>();
         String username = loginDetails.getUsername();
         FacultyData storedFaculty = null;
 
-        // Check if username is a number (faculty ID)
-        if (username.matches("\\d+")) { 
+        if (username.matches("\\d+")) {
             storedFaculty = facultyRepo.findById(Integer.parseInt(username)).orElse(null);
         }
-
-        // If not found by ID, check mobile number and email
         if (storedFaculty == null) {
             storedFaculty = facultyRepo.findByMobileNumber(username).orElse(null);
         }
@@ -110,23 +97,16 @@ public class LoginController {
             storedFaculty = facultyRepo.findByEmail(username).orElse(null);
         }
 
-        if (storedFaculty != null) {
-            // Validate the password
-            boolean match = encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword());
-            if (match) {
-                logger.info("Faculty Successfully Logged In");
-                return true;
-            } else {
-                logger.warn("Faculty Entered Incorrect password");
-                return false;
-            }
+        if (storedFaculty != null && encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword())) {
+            logger.info("Faculty Successfully Logged In");
+            String token = jwtUtil.generateToken(username);
+            response.put("token", token);
+            return response;
         }
 
-        logger.warn("Faculty Not Found");
-        return false;
+        logger.warn("Invalid Faculty Credentials");
+        response.put("error", "Invalid credentials");
+        return response;
     }
-
-
-    
-    
+   
 }
