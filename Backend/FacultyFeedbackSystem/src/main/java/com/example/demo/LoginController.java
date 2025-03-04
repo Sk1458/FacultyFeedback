@@ -1,8 +1,13 @@
 package com.example.demo;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,7 +98,7 @@ public class LoginController {
     }
     
     @PostMapping("/faculty/validate")
-    public boolean validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
+    public ResponseEntity<Map<String, Object>> validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
         String username = loginDetails.getUsername();
         FacultyData storedFaculty = null;
 
@@ -111,22 +116,24 @@ public class LoginController {
         }
 
         if (storedFaculty != null) {
-            // Validate the password
             boolean match = encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword());
             if (match) {
                 logger.info("Faculty Successfully Logged In");
-                return true;
+
+                // Send facultyId in response
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("facultyId", storedFaculty.getId());
+                return ResponseEntity.ok(response);
             } else {
                 logger.warn("Faculty Entered Incorrect password");
-                return false;
+                return ResponseEntity.ok(Collections.singletonMap("success", false));
             }
         }
 
         logger.warn("Faculty Not Found");
-        return false;
+        return ResponseEntity.ok(Collections.singletonMap("success", false));
     }
 
-
-    
-    
+   
 }

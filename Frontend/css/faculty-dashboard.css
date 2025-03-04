@@ -1,0 +1,35 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    padding: 10px;
+}
+
+.custom-card {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.custom-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.custom-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.custom-card p {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.container h2 {
+    font-weight: bold;
+}
