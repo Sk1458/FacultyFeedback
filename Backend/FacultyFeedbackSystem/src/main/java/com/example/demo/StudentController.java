@@ -60,50 +60,58 @@ public class StudentController {
 	 
 	 @PostMapping("/student/submitFeedback")
 	 public ResponseEntity<String> submitFeedback(@RequestBody FeedbackEntry feedback, @RequestParam int facultyId) {
-	     logger.info("Feedback submission request received for Faculty ID = {}", facultyId);
+		 logger.info("Feedback submission request received for Faculty ID = {}", facultyId);
 
-	     try {
-	         FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
+		    try {
+		        FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
 
-	         if (faculty == null) {
-	             logger.warn("Faculty with ID = {} not found", facultyId);
-	             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
-	         }
+		        if (faculty == null) {
+		            logger.warn("Faculty with ID = {} not found", facultyId);
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
+		        }
 
-	         // Process sentiment for each feedback field
-	         if (feedback.getRegularity() != null && !feedback.getRegularity().isEmpty()) {
-	             feedback.setRegularitySentiment(StanfordNLPProcessor.processText(feedback.getRegularity()));
-	         }
-	         if (feedback.getKnowledgeDepth() != null && !feedback.getKnowledgeDepth().isEmpty()) {
-	             feedback.setKnowledgeDepthSentiment(StanfordNLPProcessor.processText(feedback.getKnowledgeDepth()));
-	         }
-	         if (feedback.getCommunication() != null && !feedback.getCommunication().isEmpty()) {
-	             feedback.setCommunicationSentiment(StanfordNLPProcessor.processText(feedback.getCommunication()));
-	         }
-	         if (feedback.getEngagement() != null && !feedback.getEngagement().isEmpty()) {
-	             feedback.setEngagementSentiment(StanfordNLPProcessor.processText(feedback.getEngagement()));
-	         }
-	         if (feedback.getExplanationQuality() != null && !feedback.getExplanationQuality().isEmpty()) {
-	             feedback.setExplanationQualitySentiment(StanfordNLPProcessor.processText(feedback.getExplanationQuality()));
-	         }
-	         if (feedback.getOverallPerformance() != null && !feedback.getOverallPerformance().isEmpty()) {
-	             feedback.setOverallPerformanceSentiment(StanfordNLPProcessor.processText(feedback.getOverallPerformance()));
-	         }
-	         if (feedback.getAdditionalComments() != null && !feedback.getAdditionalComments().isEmpty()) {
-	             feedback.setAdditionalCommentsSentiment(StanfordNLPProcessor.processText(feedback.getAdditionalComments()));
-	         }
+		        // Process feedback with NLP
+		        SentimentResult regularity = StanfordNLPProcessor.processText(feedback.getRegularity());
+		        SentimentResult knowledgeDepth = StanfordNLPProcessor.processText(feedback.getKnowledgeDepth());
+		        SentimentResult communication = StanfordNLPProcessor.processText(feedback.getCommunication());
+		        SentimentResult engagement = StanfordNLPProcessor.processText(feedback.getEngagement());
+		        SentimentResult explanationQuality = StanfordNLPProcessor.processText(feedback.getExplanationQuality());
+		        SentimentResult overallPerformance = StanfordNLPProcessor.processText(feedback.getOverallPerformance());
+		        SentimentResult additionalComments = StanfordNLPProcessor.processText(feedback.getAdditionalComments());
 
-	         // Add the feedback entry to the faculty's feedback list
-	         faculty.getFeedbacks().add(feedback);
-	         facultyRepo.save(faculty);
+		        // Store updated values in feedback entry
+		        feedback.setRegularity(regularity.getProcessedText());
+		        feedback.setRegularitySentiment(regularity.getSentiment());
 
-	         logger.info("Feedback successfully added for Faculty ID = {}", facultyId);
-	         return ResponseEntity.ok("Feedback submitted successfully!");
-	     } 
-	     catch (Exception e) {
-	         logger.error("An error occurred while submitting feedback: {}", e.getMessage());
-	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit feedback");
-	     }
+		        feedback.setKnowledgeDepth(knowledgeDepth.getProcessedText());
+		        feedback.setKnowledgeDepthSentiment(knowledgeDepth.getSentiment());
+
+		        feedback.setCommunication(communication.getProcessedText());
+		        feedback.setCommunicationSentiment(communication.getSentiment());
+
+		        feedback.setEngagement(engagement.getProcessedText());
+		        feedback.setEngagementSentiment(engagement.getSentiment());
+
+		        feedback.setExplanationQuality(explanationQuality.getProcessedText());
+		        feedback.setExplanationQualitySentiment(explanationQuality.getSentiment());
+
+		        feedback.setOverallPerformance(overallPerformance.getProcessedText());
+		        feedback.setOverallPerformanceSentiment(overallPerformance.getSentiment());
+
+		        feedback.setAdditionalComments(additionalComments.getProcessedText());
+		        feedback.setAdditionalCommentsSentiment(additionalComments.getSentiment());
+
+		        // Save the feedback
+		        faculty.getFeedbacks().add(feedback);
+		        facultyRepo.save(faculty);
+
+		        logger.info("Feedback successfully added for Faculty ID = {}", facultyId);
+		        return ResponseEntity.ok("Feedback submitted successfully!");
+		    } 
+		    catch (Exception e) {
+		        logger.error("An error occurred while submitting feedback: {}", e.getMessage());
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit feedback");
+		    }
 	 }
 
 	
