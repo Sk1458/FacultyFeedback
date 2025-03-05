@@ -33,3 +33,49 @@ body {
 .container h2 {
     font-weight: bold;
 }
+
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Initially hidden */
+    width: 300px;
+    height: 100%;
+    background: #f8f9fa;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 15px;
+    overflow-y: auto;
+    z-index: 1050;
+}
+
+/* Sidebar active state */
+.sidebar.active {
+    right: 0;
+}
+
+/* Sidebar handle (toggle button) */
+.sidebar-handle {
+    position: fixed;
+    top: 50%;
+    right: 0; /* Always visible */
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.3s ease, right 0.3s ease;
+    z-index: 1100; /* Ensure it stays above everything */
+}
+
+/* Change position when sidebar is open */
+.sidebar.active + .sidebar-handle {
+    right: 300px; /* Moves with the sidebar */
+}
+
+/* Hover effect */
+.sidebar-handle:hover {
+    background: #0056b3;
+}

@@ -264,7 +264,7 @@ public class FacultyController {
 	@GetMapping("/faculty/performance")
 	public ResponseEntity<?> getFacultyPerformance(@RequestParam String facultyId) {
 	    Optional<FacultyData> facultyOptional;
-	    
+
 	    try {
 	        int facultyIdInt = Integer.parseInt(facultyId); // Convert String to Integer
 	        facultyOptional = facultyRepo.findById(facultyIdInt);
@@ -283,11 +283,13 @@ public class FacultyController {
 	        return ResponseEntity.ok(Collections.singletonMap("message", "No feedback available"));
 	    }
 
-	    // Sentiment scores mapping
+	    // Updated sentiment scores mapping
 	    Map<String, Integer> sentimentScores = Map.of(
+	        "Very Positive", 6,
 	        "Positive", 5,
 	        "Neutral", 3,
-	        "Negative", 1
+	        "Negative", 1,
+	        "Very Negative", 0
 	    );
 
 	    // Initialize category scores
@@ -323,6 +325,7 @@ public class FacultyController {
 
 	    return ResponseEntity.ok(response);
 	}
+
 
 
 }

@@ -61,14 +61,14 @@ function generateChart(type, data) {
                 backgroundColor: type === "bar" ? ["#007bff", "#28a745", "#ffc107", "#dc3545", "#17a2b8"] : 
                                  type === "pie" ? ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"] :
                                  type === "radar" ? ["rgba(0,123,255,0.5)"] : "#007bff", 
-                borderColor: ["black"],  // Keeps a black border for clarity
+                borderColor: ["black"],
                 borderWidth: 1.5 
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, 
-            scales: type === "pie" || type === "radar" ? {} : { y: { beginAtZero: true, max: 5 } }
+            maintainAspectRatio: false,
+            scales: type === "pie" || type === "radar" ? {} : { y: { beginAtZero: true, max: 6 } } // Updated max value
         }
     });
 }

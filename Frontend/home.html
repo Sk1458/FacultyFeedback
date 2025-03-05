@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NLP-driven Sentiment Analysis-based Faculty Insights System</title>
+  <!-- Favicon -->
+  <link rel="icon" href="images/icon1-removebg-preview.png" type="image/x-icon" />
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,238 +43,344 @@
       to { opacity: 1; }
     }
 
-    /* Navbar Styles */
-    .navbar {
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      letter-spacing: 0.5px;
-      padding: 0.75rem 1rem;
-    }
-    .navbar.scrolled {
-      background-color: rgba(0, 0, 0, 0.85);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    }
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 1.4rem;
-    }
-    .navbar-toggler {
-      border: none;
-    }
-    .navbar-toggler-icon {
-      background-color: var(--nav-yellow);
-      border-radius: 3px;
-    }
-    .navbar-nav .nav-item {
-      margin-right: 15px;
-    }
-    .navbar-nav .nav-link {
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--nav-yellow) !important;
-      padding: 10px 15px;
-      transition: all 0.3s ease;
-    }
-    .navbar-nav .nav-link:hover,
-    .navbar-nav .nav-link:focus {
-      background-color: var(--nav-hover);
-      border-radius: 5px;
-      color: #fff !important;
-      text-shadow: 0 0 5px var(--nav-yellow);
-    }
-    .navbar-nav .nav-item:last-child {
-      margin-right: 0;
-    }
+  /* Navbar Styles */
+.navbar {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1rem;
+}
+.navbar.scrolled {
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1rem; /* Slight padding adjustment on scroll */
+}
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  transition: color 0.3s ease;
+}
+.navbar-brand:hover {
+  color: var(--nav-yellow);
+}
+.navbar-toggler {
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.navbar-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg); /* Slight rotation on hover */
+}
+.navbar-toggler-icon {
+  background-color: var(--nav-yellow);
+  border-radius: 3px;
+}
+.navbar-nav .nav-item {
+  margin-right: 20px; /* Slight increase for better spacing */
+}
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--nav-yellow) !important;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  background-color: var(--nav-hover);
+  border-radius: 5px;
+  color: #fff !important;
+  text-shadow: 0 0 5px var(--nav-yellow);
+  transform: scale(1.05); /* Slight scaling effect on hover */
+}
+.navbar-nav .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+.navbar-nav .nav-item:last-child {
+  margin-right: 0;
+}
 
-    /* Hero Section */
-    .hero {
-      color: #fff;
-      text-align: center;
-      padding: 120px 20px;
-      position: relative;
-      z-index: 1;
-      background: linear-gradient(135deg, rgba(152, 252, 255, 0.8), rgba(167, 194, 12, 0.8));
-      opacity: 0;
-      animation: slideIn var(--transition-speed) forwards;
-    }
-    @keyframes slideIn {
-      from { transform: translateY(-30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-shadow: var(--text-shadow);
-    }
-    .hero p {
-      font-size: 1.25rem;
-      font-weight: 400;
-      max-width: 700px;
-      margin: 0 auto 1.5rem auto;
-      line-height: 1.6;
-    }
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 120px 20px;
+  color: #fff;
+  z-index: 1;
 
-    /* Carousel Item Styles */
-    .carousel-item {
-      width: 100%;
-      height: 400px;
-      overflow: hidden;
-      position: relative;
-      padding: 100px 0;
-      transition: background-color var(--transition-speed) ease;
-    }
-    .carousel-item:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      z-index: 0;
-    }
-    .carousel-inner {
-      z-index: 1;
-    }
-    /* Slide backgrounds */
-    .carousel-item-1 {
-      background-image: url('./images/home3.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      height: 500px;
-      position: relative;
-    }
+  /* Gradient Background with Animation */
+  background: linear-gradient(-45deg, #001f3f, #005f73, #0a9396, #94d2bd);
+  background-size: 300% 300%;
+  animation: gradientAnimation 6s ease-in-out infinite;
 
-    .carousel-content {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: white;
-      text-align: right;
-      padding: 20px;
-    }
+  /* Frosted Glass Effect */
+  backdrop-filter: blur(8px);
 
-    .carousel-item-2 {
-      background-image: url('./images/nlp.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 500px;
-      position: relative;
-    }
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+  overflow: hidden;
+}
 
-    .carousel-item-2 h1 {
-      position: absolute;
-      top: 10%;
-      left: 5%;
-      color: white;
-      font-size: 2rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    }
+/* Professional Gradient Animation */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 100% 50%; background: linear-gradient(-45deg, #00274d, #004e89, #006d77, #83c5be); }
+  50% { background-position: 0% 50%; background: linear-gradient(-45deg, #14213d, #0077b6, #00a896, #f4a261); }
+  75% { background-position: 100% 50%; background: linear-gradient(-45deg, #1b263b, #415a77, #778da9, #e0fbfc); }
+  100% { background-position: 0% 50%; background: linear-gradient(-45deg, #001f3f, #005f73, #0a9396, #94d2bd); }
+}
 
-    .carousel-item-2 p {
-      position: absolute;
-      top: 20%;
-      left: 5%;
-      color: white;
-      font-size: 1.25rem;
-      width: 50%;
-    }
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-    .carousel-item-3 {
-      background-image: url('./images/db.jpg');
-      background-size: cover;
-      background-position: top center;
-      height: 500px;
-      position: relative;
-    }
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .hero {
+    padding: 80px 15px;
+  }
+}
 
-    .carousel-item-4 {
-      background-image: url('./images/ad.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 500px;
-      position: relative;
-    }
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.hero h1:hover {
+  transform: scale(1.05); /* Slight scaling effect on hover */
+  color: var(--nav-yellow); /* Change color on hover */
+}
+.hero p {
+  font-size: 1.25rem;
+  font-weight: 400;
+  max-width: 700px;
+  margin: 0 auto 1.5rem auto;
+  line-height: 1.6;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.hero p:hover {
+  transform: scale(1.05); /* Slight scaling effect on hover */
+  color: var(--nav-yellow); /* Change color on hover */
+}
 
-    .carousel-item-4 h1 {
-      position: absolute;
-      top: 10%;
-      left: 5%;
-      color: white;
-      font-size: 2rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    }
 
-    .carousel-item-4 p {
-      position: absolute;
-      top: 20%;
-      left: 5%;
-      color: white;
-      font-size: 1.25rem;
-      width: 50%;
-    }
-  /* Feedback Slide (Bottom text) */
-  .carousel-item-5 {
+/* Your original code */
+.carousel-item {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  padding: 100px 0;
+  transition: background-color var(--transition-speed) ease;
+}
+.carousel-item:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 0;
+}
+.carousel-inner {
+  z-index: 1;
+}
+.carousel-item-1 {
+  background-image: url('./images/home3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 500px;
+  position: relative;
+}
+.carousel-content {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  text-align: right;
+  padding: 20px;
+}
+.carousel-item-2 {
+  background-image: url('./images/nlp.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  position: relative;
+}
+.carousel-item-2 h1 {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  color: white;
+  font-size: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.carousel-item-2 p {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: white;
+  font-size: 1.25rem;
+  width: 50%;
+}
+.carousel-item-3 {
+  background-image: url('./images/db.jpg');
+  background-size: cover;
+  background-position: top center;
+  height: 500px;
+  position: relative;
+}
+.carousel-item-4 {
+  background-image: url('./images/ad.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  position: relative;
+}
+.carousel-item-4 h1 {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  color: white;
+  font-size: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.carousel-item-4 p {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: white;
+  font-size: 1.25rem;
+  width: 50%;
+}
+.carousel-item-5 {
   background-image: url('./images/feed.jpg');
   background-size: cover;
   background-position: center;
   height: 500px;
   position: relative;
-  }
-
-  .carousel-item-5 h1,
-  .carousel-item-5 p {
+}
+.carousel-item-5 h1,
+.carousel-item-5 p {
   position: absolute;
-  bottom: 12%; /* Position text at the bottom */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust text to be perfectly centered */
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
   color: white;
   font-size: 2rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  text-align: center; /* Align text to the center */
+  text-align: center;
   padding: 20px;
-  }
-
-  .carousel-item-5 h1 {
+}
+.carousel-item-5 h1 {
   font-size: 2.5rem;
-  }
-
-  .carousel-item-5 p {
+}
+.carousel-item-5 p {
   font-size: 1.25rem;
-  }
-
-
-  /* Database Slide (Top text) */
-  .carousel-item-3 p {
+}
+.carousel-item-3 p {
   position: absolute;
-  top: 10%; /* Moves the text towards the top */
+  top: 10%;
   left: 5%;
   color: white;
   font-size: 1.25rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.carousel-item.carousel-item-6 {
+  padding: 0 !important;
+  background: url('./images/home1.jpg') center no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+}
+.carousel-item.carousel-item-6 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.carousel-item-7 {
+  background-image: url('./images/slide.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+}
+
+/* Add forward and backward slide animations */
+@keyframes forwardSlide {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
-    .carousel-item.carousel-item-6 {
-        padding: 0 !important;
-        background: url('./images/home1.jpg') center no-repeat;
-        background-size: cover;
-        background-position: center;
-        background-attachment: scroll;
-        }
+@keyframes backwardSlide {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
-    .carousel-item.carousel-item-6 img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .carousel-item-7 {
-      background-image: url('./images/slide.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 500px;
-    }
+/* Apply animations to carousel items */
+.carousel-item-next {
+  animation: forwardSlide 0.5s forwards;
+}
+
+.carousel-item-prev {
+  animation: backwardSlide 0.5s forwards;
+}
+/* Navigation buttons */
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  width: 60px; /* Increased size */
+  height: 60px; /* Increased size */
+  background-color: rgba(0, 0, 0, 0.7); /* Darker background for better visibility */
+  border: 3px solid white; /* Added border to make it thicker */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  font-size: 1.5rem; /* Increased font size */
+  font-weight: bold; /* Bold text */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Glow effect on hover */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+/* Positioning the buttons */
+.carousel-control-prev {
+  left: 15px;
+}
+
+.carousel-control-next {
+  right: 15px;
+}
+
     .footer {
       background-color: #343a40;
       color: #fff;
@@ -302,26 +410,39 @@
     .footer .btn-link:hover {
       color: #fff;
     }
-</style>
+  </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
-    <div class="container">
-      <a class="navbar-brand" href="#">NLP-driven Sentiment Analysis-based Faculty Insights System</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
-          <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
-        </ul>
-      </div>
+ <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="./images/icon1.jpg" alt="Logo" style="height: 40px; width: 40px; margin-right: 10px; border-radius: 50%;"> 
+      NLP-driven Sentiment Analysis-based Faculty Insights System
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
+        <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
+<marquee behavior="scroll" direction="left" scrollamount="5" style="
+    font-family: Arial, sans-serif; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: white; 
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.8);
+    background-color: black; 
+    padding: 5px;">
+    Final Year Project presented by Computer Science Students at Aditya College of Engineering and Technology.
+</marquee>
 
   <!-- Hero Section with Carousel -->
   <header class="hero">
