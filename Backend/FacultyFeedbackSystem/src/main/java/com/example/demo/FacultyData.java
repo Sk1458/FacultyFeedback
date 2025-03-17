@@ -30,7 +30,6 @@ public class FacultyData {
 	
 	@ElementCollection
     @CollectionTable(name = "facultySubjects", joinColumns = @JoinColumn(name = "faculty_id"))
-    @Column(name = "subject")
 	private List<FacultySubject> subjects;
 	
 	@ElementCollection

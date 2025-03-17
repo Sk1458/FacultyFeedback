@@ -2,9 +2,11 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -258,70 +260,72 @@ public class FacultyController {
 	    }
 	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found.");
 	}
-
-
 	
-	
-	@GetMapping("/admin/viewFacultyPerformance")
-	public ResponseEntity<List<FacultyPerformanceDTO>> getFacultyPerformance() {
-	    logger.info("Fetching Faculty Performance Data");
+	@GetMapping("/faculty/performance")
+	public ResponseEntity<?> getFacultyPerformance(@RequestParam String facultyId) {
+	    Optional<FacultyData> facultyOptional;
 
 	    try {
-	        List<FacultyData> facultyList = facultyRepo.findAll(); // Get all faculty
-
-	        List<FacultyPerformanceDTO> performanceList = facultyList.stream().map(faculty -> {
-	            Map<String, List<Integer>> subjectScores = new HashMap<>();
-
-	            // Assuming `faculty.getFeedbacks()` fetches all feedback entries for the faculty
-	            List<FeedbackEntry> feedbacks = faculty.getFeedbacks();
-
-	            for (FeedbackEntry feedback : feedbacks) {
-	                String subject = feedback.getSubject();
-	                int overallScore = calculateOverallScore(feedback);
-
-	                subjectScores.putIfAbsent(subject, new ArrayList<>());
-	                subjectScores.get(subject).add(overallScore);
-	            }
-
-	            // Calculate average performance per subject
-	            Map<String, Double> subjectPerformance = subjectScores.entrySet().stream()
-	                    .collect(Collectors.toMap(
-	                            Map.Entry::getKey,
-	                            entry -> entry.getValue().stream().mapToInt(Integer::intValue).average().orElse(0.0)
-	                    ));
-
-	            // Convert faculty image from byte[] to Base64 string
-	            String base64Image = faculty.getImage() != null ? 
-	                                 Base64.getEncoder().encodeToString(faculty.getImage()) : null;
-	            
-	            double overallScore = subjectPerformance.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-
-	            // Create DTO for this faculty
-	            return new FacultyPerformanceDTO(faculty.getId(), faculty.getName(), subjectPerformance, base64Image, overallScore);
-	        }).collect(Collectors.toList());
-
-	        logger.info("Successfully calculated faculty performance data");
-	        return ResponseEntity.ok(performanceList);
-	    } catch (Exception e) {
-	        logger.error("Error calculating faculty performance: {}", e.getMessage());
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).body(null);
+	        int facultyIdInt = Integer.parseInt(facultyId); // Convert String to Integer
+	        facultyOptional = facultyRepo.findById(facultyIdInt);
+	    } catch (NumberFormatException e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid faculty ID format");
 	    }
+
+	    if (facultyOptional.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty not found");
+	    }
+
+	    FacultyData faculty = facultyOptional.get();
+	    List<FeedbackEntry> feedbackList = Objects.requireNonNullElse(faculty.getFeedbacks(), Collections.emptyList());
+
+	    if (feedbackList.isEmpty()) {
+	        return ResponseEntity.ok(Collections.singletonMap("message", "No feedback available"));
+	    }
+
+	    // Updated sentiment scores mapping
+	    Map<String, Integer> sentimentScores = Map.of(
+	        "Very Positive", 6,
+	        "Positive", 5,
+	        "Neutral", 3,
+	        "Negative", 1,
+	        "Very Negative", 0
+	    );
+
+	    // Initialize category scores
+	    Map<String, Double> categoryScores = new HashMap<>();
+	    String[] categories = {"regularity", "knowledgeDepth", "communication", "engagement", "explanationQuality"};
+	    for (String category : categories) {
+	        categoryScores.put(category, 0.0);
+	    }
+
+	    int totalFeedback = feedbackList.size();
+
+	    // Calculate scores based on sentiment
+	    for (FeedbackEntry feedback : feedbackList) {
+	        categoryScores.put("regularity", categoryScores.get("regularity") + sentimentScores.getOrDefault(feedback.getRegularitySentiment(), 0));
+	        categoryScores.put("knowledgeDepth", categoryScores.get("knowledgeDepth") + sentimentScores.getOrDefault(feedback.getKnowledgeDepthSentiment(), 0));
+	        categoryScores.put("communication", categoryScores.get("communication") + sentimentScores.getOrDefault(feedback.getCommunicationSentiment(), 0));
+	        categoryScores.put("engagement", categoryScores.get("engagement") + sentimentScores.getOrDefault(feedback.getEngagementSentiment(), 0));
+	        categoryScores.put("explanationQuality", categoryScores.get("explanationQuality") + sentimentScores.getOrDefault(feedback.getExplanationQualitySentiment(), 0));
+	    }
+
+	    // Convert total scores to average scores
+	    for (String category : categories) {
+	        categoryScores.put(category, categoryScores.get(category) / totalFeedback);
+	    }
+
+	    // Compute overall score (average of all category scores)
+	    double overallScore = categoryScores.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+
+	    // Prepare response JSON
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("overallScore", overallScore);
+	    response.putAll(categoryScores);
+
+	    return ResponseEntity.ok(response);
 	}
 
-    private int calculateOverallScore(FeedbackEntry feedback) {
-        Map<String, Integer> scoreMap = Map.of(
-                "very bad", 1,
-                "bad", 2,
-                "good", 3,
-                "very good", 4
-        );
 
-        return scoreMap.get(feedback.getRegularity()) +
-               scoreMap.get(feedback.getKnowledgeDepth()) +
-               scoreMap.get(feedback.getCommunication()) +
-               scoreMap.get(feedback.getEngagement()) +
-               scoreMap.get(feedback.getExplanationQuality()) +
-               scoreMap.get(feedback.getOverallPerformance());
-    }
+
 }

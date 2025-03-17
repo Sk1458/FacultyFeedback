@@ -9,19 +9,21 @@ function validateFacultyLogin(event) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username, password })  // Ensure backend expects this format
+        body: JSON.stringify({ username, password })  
     })
     .then(response => response.json())
     .then(data => {
-        if (data) {
+        if (data.success) {  // Backend returns { success: true, facultyId: 123 }
+            sessionStorage.setItem("facultyId", data.facultyId);  // Store faculty ID
             alert("Login successful!");
-            window.location.href = "faculty-dashboard.html"; // Redirect on success
+            window.location.href = "faculty-dashboard.html"; 
         } else {
             document.getElementById("faculty-error-message").innerText = "Invalid credentials. Please try again.";
         }
     })
     .catch(error => console.error("Error:", error));
 }
+
 
 document.getElementById('togglePassword').addEventListener('click', function () {
     var passwordField = document.getElementById("password");

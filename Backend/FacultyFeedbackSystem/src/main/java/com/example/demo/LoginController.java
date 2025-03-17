@@ -1,11 +1,15 @@
 package com.example.demo;
 
+
+import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,8 +86,9 @@ public class LoginController {
     }
     
     @PostMapping("/faculty/validate")
-    public Map<String, String> validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
-        Map<String, String> response = new HashMap<>();
+
+    public ResponseEntity<Map<String, Object>> validateFaculty(@RequestBody FacultyLoginDTO loginDetails) {
+
         String username = loginDetails.getUsername();
         FacultyData storedFaculty = null;
 
@@ -97,16 +102,24 @@ public class LoginController {
             storedFaculty = facultyRepo.findByEmail(username).orElse(null);
         }
 
-        if (storedFaculty != null && encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword())) {
-            logger.info("Faculty Successfully Logged In");
-            String token = jwtUtil.generateToken(username);
-            response.put("token", token);
-            return response;
+        if (storedFaculty != null) {
+            boolean match = encoder.matches(loginDetails.getPassword(), storedFaculty.getPassword());
+            if (match) {
+                logger.info("Faculty Successfully Logged In");
+
+                // Send facultyId in response
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("facultyId", storedFaculty.getId());
+                return ResponseEntity.ok(response);
+            } else {
+                logger.warn("Faculty Entered Incorrect password");
+                return ResponseEntity.ok(Collections.singletonMap("success", false));
+            }
         }
 
-        logger.warn("Invalid Faculty Credentials");
-        response.put("error", "Invalid credentials");
-        return response;
+        logger.warn("Faculty Not Found");
+        return ResponseEntity.ok(Collections.singletonMap("success", false));
     }
    
 }

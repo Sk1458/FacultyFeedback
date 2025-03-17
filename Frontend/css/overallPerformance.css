@@ -1,0 +1,15 @@
+.chart-container {
+    width: 500px;  
+    height: 500px; 
+    max-width: 90%; 
+    max-height: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Spacing between buttons */
+button.m-2 {
+    margin: 0 20px;
+}
