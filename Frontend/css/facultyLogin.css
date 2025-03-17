@@ -1,0 +1,180 @@
+
+body {
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background: url('../images/students.jpg') no-repeat center center/cover;
+}
+.navbar {
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 15px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.navbar-brand {
+    color: #f1c40f !important;
+    font-size: 1.6rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f1c40f !important;
+}
+
+/* Content Alignment */
+.content-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    padding-right: 5%;
+}
+.container {
+    background: transparent;
+    padding: 40px;
+    width: auto; /* Remove 100% width */
+    max-width: 400px;
+    text-align: center;
+    margin-left: auto;  /* Pushes the container to the right */
+    margin-right: 0;    /* Removes the auto right margin */
+}
+
+/* Heading */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #f1c40f;
+    text-shadow: 0 0 10px #f1c40f;
+}
+
+/* Form Styles */
+.mb-3 {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    outline: none;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+.form-control:focus {
+    border-bottom: 2px solid #f1c40f;
+    box-shadow: 0 0 12px #f1c40f;
+}
+.mb-3 label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: black;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    background: transparent; /* Ensure no background */
+}
+
+.form-control:focus ~ label,
+.form-control:not(:placeholder-shown) ~ label {
+    top: -10px; /* Adjusted position */
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: black;
+    background: transparent; /* Ensure no white background */
+}
+::placeholder {
+    color: black !important;
+    opacity: 1;
+}
+
+/* Password Input with Toggle */
+.input-group {
+    position: relative;
+    width: 100%;
+}
+
+.input-group .form-control {
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #ddd;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #f1c40f;
+}
+
+/* Button Styles */
+.btn-login {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #2980b9;
+    border: none;
+    color: white;
+    padding: 12px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px #2980b9;
+}
+
+.btn-login:hover {
+    background-color: #3498db;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #3498db;
+}
+/* Register Link */
+.register-link {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: black;
+}
+
+.register-link a {
+    color: #f1c40f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+    color: black;
+}
+#faculty-error-message {
+    color: red;
+    display: none;
+    font-size: 1rem;
+}
