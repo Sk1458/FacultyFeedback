@@ -23,11 +23,11 @@
                     <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
-                    <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
                 </ul>
             </div>
         </div>
-    </nav> 
+    </nav>
+
     <div class="content-container">
         <div class="container">
             <div class="loginBx">
@@ -38,25 +38,58 @@
                 </h2>
                 <form id="student-login-form" onsubmit="validateStudentLogin(event)">
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="student-id" name="username"
-                            placeholder="enter Student Id" required>
+                        <input type="text" class="form-control" id="student-id" name="username" placeholder="Enter Student ID" required>
                     </div>
                     <div class="mb-3">
                         <div class="input-group">
-                            <input type="password" class="form-control" id="password" name="password"
-                                placeholder="enter your password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                             <button type="button" class="btn btn-outline-secondary" id="togglePassword">Show</button>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-login">Login</button>
+                    <button type="button" class="btn btn-link text-white mt-2" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                        Forgot Password?
+                    </button>
                 </form>
-            </div>
                 <div id="student-error-message" class="text-danger mt-2"></div>
             </div>
         </div>
     </div>
+
+    <!-- ✅ Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Forgot Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="step1">
+                        <input type="text" id="forgotRollNumber" class="form-control" placeholder="Enter Roll Number" required>
+                        <button class="btn btn-primary mt-2 w-100" onclick="sendOTP()">Send OTP</button>
+                        <div id="otpMessage" class="text-success mt-2"></div>
+                    </div>
+                    
+                    <div id="step2" style="display: none;">
+                        <input type="text" id="otp" class="form-control mt-2" placeholder="Enter OTP" required>
+                        <button class="btn btn-primary mt-2 w-100" onclick="verifyOTP()">Verify OTP</button>
+                        <div id="verifyMessage" class="text-success mt-2"></div>
+                    </div>
+
+                    <div id="step3" style="display: none;">
+                        <input type="password" id="newPassword" class="form-control mt-2" placeholder="Enter New Password" required>
+                        <button class="btn btn-success mt-2 w-100" onclick="resetPassword()">Reset Password</button>
+                        <div id="resetMessage" class="text-success mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/student-login.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
