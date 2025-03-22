@@ -22,7 +22,6 @@
           <li class="nav-item"><a class="nav-link" href="loginPage.html">Login</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
           <li class="nav-item"><a class="nav-link" href="help.html">Help</a></li>
-          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
         </ul>
       </div>
     </div>
@@ -31,22 +30,55 @@
   <div class="content-container">
     <div class="container">
       <h1>Admin Login</h1>
-        <form id="admin-login-form" onsubmit="validateAdminLogin(event)">
-          <div class="mb-3">
-            <input type="text" class="form-control" id="admin-id" name="username" placeholder="enter Admin Id" required>
+      <form id="admin-login-form" onsubmit="validateAdminLogin(event)">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="admin-id" name="username" placeholder="Enter Admin ID" required>
         </div>
         <div class="mb-3">
-            <div class="input-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="enter your password" required>
-                <button type="button" class="btn btn-outline-secondary" id="togglePassword">Show</button>
-            </div>
+          <div class="input-group">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            <button type="button" class="btn btn-outline-secondary" id="togglePassword">Show</button>
+          </div>
         </div>
-
         <button type="submit" class="btn btn-primary btn-login">Login</button>
-    </form>
-      <div class="register-link">
-        Forgot password? <a href="forget.html">reset now</a>
-        <div id="student-error-message" class="text-danger mt-2"></div>
+        <button type="button" class="btn btn-link text-dark mt-2" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+          Forgot Password?
+        </button>
+      </form>
+      <div id="admin-error-message" class="text-danger mt-2"></div>
+    </div>
+  </div>
+
+  <!-- ✅ Forgot Password Modal -->
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Forgot Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Step 1: Enter Admin ID -->
+          <div id="step1">
+            <input type="text" id="forgotAdminId" class="form-control" placeholder="Enter Admin ID" required>
+            <button class="btn btn-primary mt-2 w-100" onclick="sendAdminOTP()">Send OTP</button>
+            <div id="otpMessage" class="text-success mt-2"></div>
+          </div>
+
+          <!-- Step 2: Verify OTP -->
+          <div id="step2" style="display: none;">
+            <input type="text" id="otp" class="form-control mt-2" placeholder="Enter OTP" required>
+            <button class="btn btn-primary mt-2 w-100" onclick="verifyAdminOTP()">Verify OTP</button>
+            <div id="verifyMessage" class="text-success mt-2"></div>
+          </div>
+
+          <!-- Step 3: Reset Password -->
+          <div id="step3" style="display: none;">
+            <input type="password" id="newPassword" class="form-control mt-2" placeholder="Enter New Password" required>
+            <button class="btn btn-success mt-2 w-100" onclick="resetAdminPassword()">Reset Password</button>
+            <div id="resetMessage" class="text-success mt-2"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -54,5 +86,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/admin-login.js"></script>
 </body>
-
 </html>

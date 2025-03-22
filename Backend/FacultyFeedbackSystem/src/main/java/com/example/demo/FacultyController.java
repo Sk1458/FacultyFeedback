@@ -89,6 +89,12 @@ public class FacultyController {
 			if (facultyRepo.existsById(id)) {
 	            return ResponseEntity.badRequest().body("Faculty with ID " + id + " already exists.");
 	        }
+			
+			 // 👉 Backend email validation
+	        String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|outlook\\.com|acoe\\.edu\\.in|acet\\.edu\\.in|aec\\.edu\\.in)$";
+	        if (!email.matches(emailRegex)) {
+	            return ResponseEntity.badRequest().body("Invalid email format. Use a valid domain like @gmail.com, @acoe.edu.in, @acet.edu.in, etc.");
+	        }
 
 	        // Convert JSON string to List<FacultySubject>
 	        ObjectMapper objectMapper = new ObjectMapper();

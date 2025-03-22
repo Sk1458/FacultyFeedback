@@ -14,6 +14,9 @@ public class Admin {
 	
 	@Column
 	private String password;
+	
+	@Column
+    private String email;
 
 	public String getUsername() {
 		return username;
@@ -30,11 +33,20 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
 
-	public Admin(String username, String password) {
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Admin(String username, String password, String email) {
 		super();
 		this.username = username;
 		this.password = password;
+		this.email = email;
 	}
 
 	public Admin() {

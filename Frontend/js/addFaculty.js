@@ -38,6 +38,12 @@ function addSubjectField() {
     subjectsContainer.appendChild(div);
 }
 
+// 👉 Function to validate email format (frontend validation)
+function isValidEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|acoe\.edu\.in|acet\.edu\.in|aec\.edu\.in)$/;
+    return emailRegex.test(email);
+}
+
 document.getElementById("addFacultyForm").onsubmit = async function (event) {
     event.preventDefault();
 
@@ -57,6 +63,12 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
         }
     });
 
+    // ✅ Frontend email validation
+    if (!isValidEmail(email)) {
+        document.getElementById("errorMessage").innerHTML = "Invalid email format. Use a valid domain like @gmail.com, @acoe.edu.in, @acet.edu.in, etc.";
+        return;
+    }
+
     let response;
     try {
         if (imageFile) {
@@ -67,27 +79,19 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
             formData.append("email", email);
             formData.append("mobileNumber", mobileNumber);
             formData.append("image", imageFile);
-            formData.append("subjects", JSON.stringify(subjects)); // Ensure backend correctly parses this
+            formData.append("subjects", JSON.stringify(subjects));
 
             response = await fetch("http://localhost:8080/admin/addFaculty", {
                 method: "POST",
                 body: formData,
             });
         } else {
-            // If no image, send JSON payload
-            // response = await fetch("http://localhost:8080/admin/addFaculty", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ id: facultyId, name, subjects }),
-            // });
-
             const formData = new FormData();
             formData.append("id", facultyId);
             formData.append("name", name);
             formData.append("email", email);
             formData.append("mobileNumber", mobileNumber);
-            //formData.append("image", imageFile);
-            formData.append("subjects", JSON.stringify(subjects)); // Ensure backend correctly parses this
+            formData.append("subjects", JSON.stringify(subjects));
 
             response = await fetch("http://localhost:8080/admin/addFaculty", {
                 method: "POST",
@@ -110,10 +114,10 @@ document.getElementById("addFacultyForm").onsubmit = async function (event) {
             document.getElementById("modalMobile").textContent = facultyDetails.mobileNumber;
             document.getElementById("modalSubjects").textContent = facultyDetails.subjects;
 
-            modal.style.display = "block"; // Show the modal
-            document.getElementById("addFacultyForm").reset(); // Reset form
+            modal.style.display = "block";
+            document.getElementById("addFacultyForm").reset();
             document.getElementById("subjectsContainer").innerHTML = "";
-            document.getElementById("errorMessage").innerHTML = ""; // Clear errors
+            document.getElementById("errorMessage").innerHTML = "";
         } else {
             const errorMessage = await response.text();
             document.getElementById("errorMessage").innerHTML = errorMessage || "Failed to add faculty.";
