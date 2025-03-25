@@ -11,11 +11,17 @@
         <p class="p1">View Faculty Information</p>
         <p class="p2"><a href="admin.html"><button>Admin Dashboard</button></a></p>
     </header>
+
+    <!-- Filter Container -->
     <div class="filter-container">
+        <label for="campusFilter">Filter by Campus:</label>
+        <select id="campusFilter" onchange="applyFilters()">
+            <option value="">All Campuses</option>
+        </select>
+
         <label for="subjectFilter">Filter by Subject:</label>
-        <select id="subjectFilter" onchange="filterFacultyBySubject()">
+        <select id="subjectFilter" onchange="applyFilters()">
             <option value="">All Subjects</option>
-            <!-- Options will be dynamically populated -->
         </select>
     </div>
 
@@ -28,6 +34,7 @@
                     <th>Name</th>
                     <th>Email</th>  
                     <th>Mobile Number</th>  
+                    <th>Campus Code</th>  <!-- ✅ New Campus Code Column -->
                     <th>Subjects</th>
                     <th>Image</th>
                 </tr>
@@ -37,6 +44,7 @@
             </tbody>
         </table>
     </div> <br>
+
     <footer>
         Admin Panel | Faculty Feedback System
     </footer>

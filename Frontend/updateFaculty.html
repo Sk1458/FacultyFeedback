@@ -11,6 +11,7 @@
         <p class="p1">Update Faculty</p>
         <p class="p2"><a href="admin.html"><button>Admin Dashboard</button></a></p>
     </header>
+    
     <div class="table-container">
         <table id="facultyTable">
             <thead>
@@ -19,6 +20,7 @@
                     <th>Name</th>
                     <th>Email</th> 
                     <th>Mobile Number</th>
+                    <th>Campus Code</th>
                     <th>Subjects & Semesters</th>
                     <th>Image</th>
                     <th>Action</th>
@@ -32,7 +34,6 @@
 
     <!-- Update form -->
     <div id="updateForm">
-        <!-- Faculty ID Header -->
         <div id="facultyIdHeader"></div>
 
         <form id="updateFacultyForm">
@@ -44,6 +45,9 @@
 
             <label for="updateEmail">New Email (Optional):</label>
             <input type="email" id="updateEmail" name="email">
+
+            <label for="updateCampusCode">Campus Code (Optional):</label> 
+            <input type="text" id="updateCampusCode" name="campusCode" placeholder="Enter Campus Code"> <!-- ✅ Added Campus Code Field -->
 
             <label for="updateSubjects">Update Subjects and Semesters:</label>
             <div id="updateSubjectsContainer">
@@ -58,6 +62,7 @@
             <button type="button" class="close-btn" onclick="closeUpdateForm()">Cancel</button>
         </form>
     </div>
+
     <footer>
         Admin Panel | Faculty Feedback System
     </footer>

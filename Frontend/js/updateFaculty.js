@@ -7,12 +7,10 @@ async function loadFacultyData() {
         if (response.ok) {
             const facultyList = await response.json();
             populateFacultyTable(facultyList);
-        } 
-        else {
+        } else {
             alert("Failed to load faculty data.");
         }
-    } 
-    catch (error) {
+    } catch (error) {
         console.error("Error fetching faculty data:", error);
         alert("An error occurred while loading faculty data.");
     }
@@ -24,23 +22,23 @@ function populateFacultyTable(facultyList) {
 
     facultyList.forEach(faculty => {
         const row = document.createElement("tr");
-        
-        // Make sure 'faculty.subjects' is an array of objects with 'subject' and 'semester'
+
         const subjectSemesterPairs = faculty.subjects && Array.isArray(faculty.subjects)
             ? faculty.subjects.map(entry => `${entry.subject || 'N/A'} - ${entry.semester || 'N/A'}`).join(", ")
-            : "No subjects";  // Handle case where there are no subjects
-        
+            : "No subjects";
+
         row.innerHTML = `
             <td>${faculty.id}</td>
-            <td>${faculty.name}</td>  
+            <td>${faculty.name}</td>
             <td>${faculty.email}</td>
-            <td>${faculty.mobileNumber}</td> 
+            <td>${faculty.mobileNumber}</td>
+            <td>${faculty.campusCode || "N/A"}</td> <!-- ✅ Display Campus Code -->
             <td>${subjectSemesterPairs}</td>
             <td>
                 ${faculty.base64Image ? `<img src="data:image/jpeg;base64,${faculty.base64Image}" alt="${faculty.name}" width="50">` : "No Image"}
             </td>
             <td>
-                <button class="update-btn" onclick="openUpdateForm(${faculty.id})">Update</button>
+                <button class="update-btn" onclick="openUpdateForm(${faculty.id}, '${faculty.campusCode || ''}')">Update</button>
             </td>
         `;
 
@@ -48,26 +46,19 @@ function populateFacultyTable(facultyList) {
     });
 }
 
-// Open the update form
-function openUpdateForm(facultyId) {
+// Open the update form with pre-filled values
+function openUpdateForm(facultyId, campusCode) {
     selectedFacultyId = facultyId;
 
     document.getElementById("facultyIdHeader").textContent = `Updating Faculty ID: ${facultyId}`;
 
-    // Reset the form fields to keep them empty
+    // Reset the form fields
     document.getElementById("updateFacultyForm").reset();
     document.getElementById("updateSubjectsContainer").innerHTML = ""; 
-
-    // const container = document.getElementById("updateSubjectsContainer");
-    // container.innerHTML = ""; // Clear existing entries
-
-    // Load existing subjects into the form
-    // subjects.forEach(entry => {
-    //     addSubjectField(entry.subject, entry.semester);
-    // });
-
     document.getElementById("updateForm").style.display = "block";
 
+    // Pre-fill campus code
+    document.getElementById("updateCampusCode").value = campusCode || "";
 }
 
 // Close the update form
@@ -92,14 +83,13 @@ function addSubjectField(subject = "", semester = "") {
 
     container.appendChild(subjectDiv);
 
-    // Add event listener to remove button
-    subjectDiv.querySelector(".remove-subject-btn").addEventListener("click", function () {
+    subjectDiv.querySelector(".remove-subject-btn").addEventListener("click", () => {
         container.removeChild(subjectDiv);
     });
 }
 
 // Add new subject-semester pair dynamically
-document.getElementById("addSubjectButton").addEventListener("click", function () {
+document.getElementById("addSubjectButton").addEventListener("click", () => {
     addSubjectField();
 });
 
@@ -119,9 +109,11 @@ document.getElementById("updateFacultyForm").onsubmit = async function (event) {
     const email = document.getElementById("updateEmail").value.trim();
     if (email) formData.append("email", email);
 
+    const campusCode = document.getElementById("updateCampusCode").value.trim();
+    if (campusCode) formData.append("campusCode", campusCode);  // ✅ Add Campus Code
+
     const image = document.getElementById("updateImage").files[0];
     if (image) formData.append("image", image);
-
 
     // Collect subjects and semesters
     const subjectsArray = [];
@@ -140,7 +132,7 @@ document.getElementById("updateFacultyForm").onsubmit = async function (event) {
 
     // ✅ Log to check what is being sent
     console.log("Final Data Being Sent:", Object.fromEntries(formData));
-    
+
     try {
         const response = await fetch("http://localhost:8080/admin/updateFaculty", {
             method: "PUT",
@@ -150,15 +142,13 @@ document.getElementById("updateFacultyForm").onsubmit = async function (event) {
         if (response.ok) {
             alert("Faculty updated successfully!");
             closeUpdateForm();
-            loadFacultyData(); // Refresh table
-        } 
-        else {
+            loadFacultyData(); 
+        } else {
             const errorText = await response.text();
             alert("Failed to update faculty: " + errorText);
         }
-    } 
-    catch (error) {
-        console.error("Error updating faculty:", error);
+    } catch (error) {
+        console.error("Error:", error);
         alert("An error occurred while updating faculty.");
     }
 };

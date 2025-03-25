@@ -93,6 +93,7 @@ button.update-btn:hover {
     background-color: #007bb5;
 }
 
+/* ✅ Pop-up form with scrollable content */
 #updateForm {
     display: none;
     position: fixed;
@@ -104,7 +105,24 @@ button.update-btn:hover {
     border-radius: 10px;
     padding: 20px;
     z-index: 1000;
-    width: 400px;
+    width: 450px;
+    max-height: 80vh;  /* Limit height for scrolling */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+/* ✅ Scroll bar customization */
+#updateForm::-webkit-scrollbar {
+    width: 10px;
+}
+
+#updateForm::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 10px;
+}
+
+#updateForm::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
 
 #updateForm label {

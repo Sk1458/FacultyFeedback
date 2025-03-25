@@ -54,7 +54,9 @@ public class FacultyData {
 	@JsonIgnore
 	private String password;
 	
-
+	@Column
+	private String campusCode;
+	
 	public int getId() {
 		return id;
 	}
@@ -126,10 +128,18 @@ public class FacultyData {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getCampusCode() {
+		return campusCode;
+	}
+
+	public void setCampusCode(String campusCode) {
+		this.campusCode = campusCode;
+	}
 
 	public FacultyData(int id, String name, List<FacultySubject> subjects, List<FeedbackEntry> feedbacks,
 			@Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits") String mobileNumber,
-			@Email(message = "Invalid email format") String email, byte[] image, String password) {
+			@Email(message = "Invalid email format") String email, byte[] image, String password, String campusCode) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -138,6 +148,7 @@ public class FacultyData {
 		this.email = email;
 		this.image = image;
 		this.password = password;
+		this.campusCode = campusCode;
 	}
 	
 	public FacultyData() {

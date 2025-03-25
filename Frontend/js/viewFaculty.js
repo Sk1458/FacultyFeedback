@@ -1,25 +1,26 @@
 let facultyList = [];
 
-// Fetch faculty data and populate the table and filter dropdown
-window.onload = async function() {
+// 🚀 Fetch faculty data and populate the table & filter dropdowns
+window.onload = async function () {
     try {
         const response = await fetch("http://localhost:8080/admin/viewFaculty");
         if (response.ok) {
             facultyList = await response.json();
+            
+            // Populate the table and dropdowns
             populateTable(facultyList);
+            populateCampusDropdown(facultyList);
             populateSubjectDropdown(facultyList);
-        } 
-        else {
+        } else {
             alert("Failed to load faculty data.");
         }
-    } 
-    catch (error) {
+    } catch (error) {
         console.error("Error:", error);
         alert("An error occurred while fetching faculty data.");
     }
 };
 
-// Populate table with faculty data
+// 🚀 Populate faculty table with data
 function populateTable(data) {
     const tableBody = document.getElementById("facultyTableBody");
     tableBody.innerHTML = ""; // Clear existing rows
@@ -27,24 +28,16 @@ function populateTable(data) {
     data.forEach(faculty => {
         const row = document.createElement("tr");
 
-        // Add faculty data
-        const idCell = document.createElement("td");
-        idCell.textContent = faculty.id;
-        row.appendChild(idCell);
+        // ID, Name, Email, Mobile
+        row.innerHTML = `
+            <td>${faculty.id}</td>
+            <td>${faculty.name}</td>
+            <td>${faculty.email || "N/A"}</td>
+            <td>${faculty.mobileNumber || "N/A"}</td>
+            <td>${faculty.campusCode || "N/A"}</td>  <!-- ✅ Display Campus Code -->
+        `;
 
-        const nameCell = document.createElement("td");
-        nameCell.textContent = faculty.name;
-        row.appendChild(nameCell);
-
-        const emailCell = document.createElement("td");
-        emailCell.textContent = faculty.email ? faculty.email : "N/A";
-        row.appendChild(emailCell);
-
-        const mobileCell = document.createElement("td");
-        mobileCell.textContent = faculty.mobileNumber ? faculty.mobileNumber : "N/A";
-        row.appendChild(mobileCell);
-
-        // Subjects (Show subject-semester pairs)
+        // Subjects
         const subjectsCell = document.createElement("td");
         if (faculty.subjects && Array.isArray(faculty.subjects)) {
             subjectsCell.textContent = faculty.subjects
@@ -55,12 +48,13 @@ function populateTable(data) {
         }
         row.appendChild(subjectsCell);
 
+        // Image
         const imageCell = document.createElement("td");
         if (faculty.base64Image) {
             const img = document.createElement("img");
             img.src = `data:image/jpeg;base64,${faculty.base64Image}`;
             img.alt = faculty.name;
-            img.width = 50; // Adjust image size
+            img.width = 50;
             imageCell.appendChild(img);
         }
         row.appendChild(imageCell);
@@ -69,7 +63,27 @@ function populateTable(data) {
     });
 }
 
-// Populate dropdown with unique subjects
+// 🚀 Populate Campus Dropdown with unique campus codes
+function populateCampusDropdown(data) {
+    const campusFilter = document.getElementById("campusFilter");
+    const uniqueCampuses = new Set();
+
+    data.forEach(faculty => {
+        if (faculty.campusCode) {
+            uniqueCampuses.add(faculty.campusCode);
+        }
+    });
+
+    campusFilter.innerHTML = '<option value="">All Campuses</option>';
+    uniqueCampuses.forEach(campus => {
+        const option = document.createElement("option");
+        option.value = campus;
+        option.textContent = campus;
+        campusFilter.appendChild(option);
+    });
+}
+
+// 🚀 Populate Subject Dropdown
 function populateSubjectDropdown(data) {
     const subjectFilter = document.getElementById("subjectFilter");
     const uniqueSubjectSemesters = new Set();
@@ -81,30 +95,31 @@ function populateSubjectDropdown(data) {
         });
     });
 
-    // Clear previous options
     subjectFilter.innerHTML = '<option value="">All Subjects</option>';
-
     uniqueSubjectSemesters.forEach(pair => {
         const option = document.createElement("option");
-        option.value = pair;  // Store "Math - Semester 3"
+        option.value = pair;
         option.textContent = pair;
         subjectFilter.appendChild(option);
     });
 }
 
-// Filter faculty by subject and semester
-function filterFacultyBySubject() {
-    const selectedValue = document.getElementById("subjectFilter").value;
+// 🚀 Apply Combined Filters (Campus + Subject)
+function applyFilters() {
+    const selectedCampus = document.getElementById("campusFilter").value;
+    const selectedSubject = document.getElementById("subjectFilter").value;
 
-    if (selectedValue === "") {
-        populateTable(facultyList); // Show all faculty if no filter is applied
-    } else {
-        const [selectedSubject, selectedSemester] = selectedValue.split(" - Semester ");
-        const filteredList = facultyList.filter(faculty =>
-            faculty.subjects.some(entry => 
-                entry.subject === selectedSubject && entry.semester == selectedSemester
-            )
+    const [selectedSub, selectedSem] = selectedSubject.split(" - Semester ") || [];
+
+    const filteredList = facultyList.filter(faculty => {
+        const campusMatch = !selectedCampus || faculty.campusCode === selectedCampus;
+
+        const subjectMatch = !selectedSubject || faculty.subjects.some(entry =>
+            entry.subject === selectedSub && entry.semester == selectedSem
         );
-        populateTable(filteredList);
-    }
+
+        return campusMatch && subjectMatch;
+    });
+
+    populateTable(filteredList);
 }

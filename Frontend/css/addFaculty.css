@@ -14,7 +14,6 @@ body {
     align-items: center;
     justify-content: center;
     overflow-y: auto;
-    position: relative;
     color: #ffffff;
 }
 
@@ -50,20 +49,21 @@ header {
 .p2 a:hover {
     text-decoration: underline;
 }
+
+/* Container */
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     max-width: 1200px;
-    max-height: 96vh; /* Set a max-height */
+    max-height: 96vh; 
     margin: 30px auto;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 15px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-    overflow: hidden; /* Enable vertical scrolling */
+    overflow: hidden; 
 }
-
 
 /* Left Side - Form */
 .form-container {
@@ -71,6 +71,24 @@ header {
     padding: 30px;
     display: flex;
     justify-content: center;
+    overflow-y: auto;         /* ✅ Add vertical scroll bar */
+    max-height: 90vh;         /* ✅ Limit form height */
+    scrollbar-width: thin;    /* For Firefox */
+    scrollbar-color: #61dafb #1b263b; 
+}
+
+/* Scroll bar for Chrome, Safari */
+.form-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.form-container::-webkit-scrollbar-track {
+    background: #1b263b;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+    background: #61dafb;
+    border-radius: 8px;
 }
 
 form {
@@ -211,6 +229,7 @@ button:hover {
     animation: fadeIn 0.5s ease-in-out;
 }
 
+/* Modal Content */
 .modal-content {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
@@ -220,32 +239,7 @@ button:hover {
     width: 50%;
     text-align: center;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    animation: slideUp 0.5s ease-in-out forwards;
     color: black;
-}
-
-/* Modal Heading */
-.modal-content h3 {
-    color: #1f4068;
-    font-size: 24px;
-}
-
-/* Close Button */
-.close-btn {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-top: 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.close-btn:hover {
-    background-color: #c9302c;
-    transform: scale(1.05);
 }
 
 /* Footer */

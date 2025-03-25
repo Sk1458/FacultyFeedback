@@ -27,7 +27,16 @@
 
                 <label for="mobile">Mobile Number (Required):</label>
                 <input type="tel" id="mobileNumber" name="mobileNumber" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
-                
+
+                <!-- ✅ Added Campus Code field -->
+                <label for="campusCode">Campus Code (Required):</label>
+                <select id="campusCode" name="campusCode" required>
+                    <option value="">-- Select Campus --</option>
+                    <option value="MH">MH</option>
+                    <option value="P3">P3</option>
+                    <option value="A9">A9</option>
+                </select>
+
                 <label>Subjects and Semesters:</label>
                 <div id="subjectsContainer">
                     <!-- Dynamic fields added here -->
@@ -57,6 +66,7 @@
             <p><strong>Name:</strong> <span id="modalName"></span></p>
             <p><strong>Email:</strong> <span id="modalEmail"></span></p>
             <p><strong>Mobile Number:</strong> <span id="modalMobile"></span></p>
+            <p><strong>Campus Code:</strong> <span id="modalCampus"></span></p>  <!-- ✅ Show campus in modal -->
             <p><strong>Subjects:</strong> <span id="modalSubjects"></span></p>
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>

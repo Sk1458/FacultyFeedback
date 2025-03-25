@@ -1,185 +1,166 @@
-// Fetch faculty data and populate the table
-let allFaculty = [];
+let facultyList = [];
+
+// ✅ Fetch and display faculty data
 window.onload = async function () {
+    await loadFacultyData();
+    populateFilters();
+};
+
+// ✅ Load faculty data
+async function loadFacultyData() {
     try {
         const response = await fetch("http://localhost:8080/admin/viewFaculty");
         if (response.ok) {
-            allFaculty = await response.json();
-            populateTable(allFaculty);
-            populateSubjectFilter();
-        } 
-        else {
+            facultyList = await response.json();
+            populateFacultyTable(facultyList);
+            populateFilters();
+        } else {
             alert("Failed to load faculty data.");
         }
-    } 
-    catch (error) {
-        console.error("Error:", error);
-        alert("An error occurred while fetching faculty data.");
+    } catch (error) {
+        console.error("Error fetching faculty data:", error);
+        alert("An error occurred while loading faculty data.");
     }
-};
+}
 
-function populateTable(facultyList) {
-    const tableBody = document.getElementById("facultyTableBody");
-    tableBody.innerHTML = ""; // Clear the table before populating
+// ✅ Populate table
+function populateFacultyTable(data) {
+    const tbody = document.getElementById("facultyTableBody");
+    tbody.innerHTML = "";
 
-    facultyList.forEach(faculty => {
+    data.forEach(faculty => {
         const row = document.createElement("tr");
 
-        const idCell = document.createElement("td");
-        idCell.textContent = faculty.id;
-        row.appendChild(idCell);
+        const subjectSemesterPairs = faculty.subjects && Array.isArray(faculty.subjects)
+            ? faculty.subjects.map(entry => `${entry.subject} - Sem ${entry.semester}`).join(", ")
+            : "No subjects";
 
-        const nameCell = document.createElement("td");
-        nameCell.textContent = faculty.name;
-        row.appendChild(nameCell);
+        row.innerHTML = `
+            <td>${faculty.id}</td>
+            <td>${faculty.name}</td>
+            <td>${faculty.email || "N/A"}</td>
+            <td>${faculty.mobileNumber || "N/A"}</td>
+            <td>${faculty.campusCode || "N/A"}</td>
+            <td>${subjectSemesterPairs}</td>
+            <td>
+                ${faculty.base64Image ? `<img src="data:image/jpeg;base64,${faculty.base64Image}" alt="${faculty.name}" width="50">` : "No Image"}
+            </td>
+            <td>
+                <button onclick="deleteFaculty(${faculty.id})" class="delete-btn">Delete Faculty</button>
+            </td>
+            <td>
+                <button onclick="openSubjectSemesterModal(${faculty.id})" class="delete-btn">Delete Subjects</button>
+            </td>
+        `;
 
-        // Add email
-        const emailCell = document.createElement("td");
-        emailCell.textContent = faculty.email || "N/A";
-        row.appendChild(emailCell);
-
-        // Add mobile number
-        const mobileCell = document.createElement("td");
-        mobileCell.textContent = faculty.mobileNumber || "N/A";
-        row.appendChild(mobileCell);
-
-        // Format subjects & semesters correctly
-        const subjectsCell = document.createElement("td");
-        if (faculty.subjects && faculty.subjects.length > 0) {
-            subjectsCell.textContent = faculty.subjects.map(s => `${s.subject} (Sem ${s.semester})`).join(", ");
-        } else {
-            subjectsCell.textContent = "N/A";
-        }
-        row.appendChild(subjectsCell);
-
-        const imageCell = document.createElement("td");
-        if (faculty.base64Image) {
-            const img = document.createElement("img");
-            img.src = `data:image/jpeg;base64,${faculty.base64Image}`;
-            img.alt = faculty.name;
-            img.width = 50; // Adjust size
-            imageCell.appendChild(img);
-        }
-        row.appendChild(imageCell);
-
-        // Delete Faculty Button
-        const deleteFacultyCell = document.createElement("td");
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "delete-btn";
-        deleteButton.onclick = () => confirmDelete(faculty.id, faculty.name);
-        deleteFacultyCell.appendChild(deleteButton);
-        row.appendChild(deleteFacultyCell);
-
-        // Delete Subject-Semester Button
-        const deleteSubjectSemesterCell = document.createElement("td");
-        const deleteSubSemButton = document.createElement("button");
-        deleteSubSemButton.textContent = "Manage Subjects";
-        deleteSubSemButton.className = "manage-subject-btn";
-        deleteSubSemButton.onclick = () => openSubjectSemesterModal(faculty);
-        deleteSubjectSemesterCell.appendChild(deleteSubSemButton);
-        row.appendChild(deleteSubjectSemesterCell);
-
-        tableBody.appendChild(row);
+        tbody.appendChild(row);
     });
 }
 
-function populateSubjectFilter() {
+// ✅ Populate filters dynamically
+function populateFilters() {
+    const subjectFilter = document.getElementById("subjectFilter");
+    const campusFilter = document.getElementById("campusFilter");
+
     const subjects = new Set();
-    allFaculty.forEach(faculty => {
-        faculty.subjects.forEach(subjectObj => {
-            subjects.add(subjectObj.subject); // Extract only subject name
+    const campuses = new Set();
+
+    facultyList.forEach(faculty => {
+        faculty.subjects.forEach(subject => {
+            subjects.add(`${subject.subject} - Sem ${subject.semester}`);
         });
+        campuses.add(faculty.campusCode || "N/A");
     });
 
-    const subjectFilter = document.getElementById("subjectFilter");
+    // Clear previous options
+    subjectFilter.innerHTML = `<option value="">All Subjects</option>`;
+    campusFilter.innerHTML = `<option value="">All Campuses</option>`;
+
+    // Populate subjects
     subjects.forEach(subject => {
         const option = document.createElement("option");
         option.value = subject;
         option.textContent = subject;
         subjectFilter.appendChild(option);
     });
+
+    // Populate campuses
+    campuses.forEach(campus => {
+        const option = document.createElement("option");
+        option.value = campus;
+        option.textContent = campus;
+        campusFilter.appendChild(option);
+    });
 }
 
-function filterBySubject() {
+// ✅ Filter functionality
+function applyFilters() {
     const selectedSubject = document.getElementById("subjectFilter").value;
-    const filteredFaculty = selectedSubject
-        ? allFaculty.filter(faculty =>
-            faculty.subjects.some(subjectObj => subjectObj.subject === selectedSubject)
-        )
-        : allFaculty;
-    populateTable(filteredFaculty);
-}
+    const selectedCampus = document.getElementById("campusFilter").value;
 
-function confirmDelete(id, name) {
-    const isConfirmed = confirm(`Are you sure you want to delete faculty: ${name}?`);
-    if (isConfirmed) {
-        deleteFaculty(id);
+    let filteredList = facultyList;
+
+    if (selectedSubject) {
+        const [filterSubject, filterSemester] = selectedSubject.split(" - Sem ");
+        filteredList = filteredList.filter(faculty =>
+            faculty.subjects.some(sub =>
+                sub.subject === filterSubject && sub.semester.toString() === filterSemester
+            )
+        );
     }
+
+    if (selectedCampus) {
+        filteredList = filteredList.filter(faculty => faculty.campusCode === selectedCampus);
+    }
+
+    populateFacultyTable(filteredList);
 }
 
-async function deleteFaculty(id) {
+// ✅ Delete faculty by ID
+async function deleteFaculty(facultyId) {
+    if (!confirm("Are you sure you want to delete this faculty?")) return;
+
     try {
-        const response = await fetch(`http://localhost:8080/admin/deleteFaculty/${id}`, {
-            method: "DELETE",
+        const response = await fetch(`http://localhost:8080/admin/deleteFaculty/${facultyId}`, {
+            method: "DELETE"
         });
+
         if (response.ok) {
             alert("Faculty deleted successfully!");
-            allFaculty = allFaculty.filter(faculty => faculty.id !== id);
-            populateTable(allFaculty);
-        } else if (response.status === 404) {
-            alert("Faculty not found.");
+            await loadFacultyData();
         } else {
-            alert("Failed to delete faculty.");
+            const errorText = await response.text();
+            alert("Failed to delete faculty: " + errorText);
         }
-    } 
-    catch (error) {
-        console.error("Error:", error);
-        alert("An error occurred while deleting the faculty.");
+    } catch (error) {
+        console.error("Error deleting faculty:", error);
+        alert("An error occurred while deleting faculty.");
     }
 }
 
-function openSubjectSemesterModal(faculty) {
+// ✅ Open modal to delete subject-semester pairs
+function openSubjectSemesterModal(facultyId) {
     const modal = document.getElementById("subjectSemesterModal");
     const subjectSemesterList = document.getElementById("subjectSemesterList");
-    const facultyNameDisplay = document.getElementById("facultyName");
 
-    // Set Faculty Name
-    facultyNameDisplay.textContent = `Subjects for ${faculty.name}`;
+    const faculty = facultyList.find(f => f.id === facultyId);
+    document.getElementById("facultyName").textContent = `Faculty: ${faculty.name}`;
 
-    // Clear previous entries
     subjectSemesterList.innerHTML = "";
 
-    // Populate subjects & semesters
-    faculty.subjects.forEach(({ subject, semester }) => {
+    faculty.subjects.forEach(subject => {
         const row = document.createElement("tr");
-
-        const subjectCell = document.createElement("td");
-        subjectCell.textContent = subject;
-        row.appendChild(subjectCell);
-
-        const semesterCell = document.createElement("td");
-        semesterCell.textContent = `Sem ${semester}`;
-        row.appendChild(semesterCell);
-
-        // Delete Button
-        const actionCell = document.createElement("td");
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Delete";
-        deleteBtn.className = "delete-subject-btn";
-        deleteBtn.onclick = () => deleteSubjectSemester(faculty.id, subject, semester);
-        actionCell.appendChild(deleteBtn);
-        row.appendChild(actionCell);
-
+        row.innerHTML = `
+            <td>${subject.subject}</td>
+            <td>${subject.semester}</td>
+            <td>
+                <button onclick="deleteSubjectSemester(${facultyId}, '${subject.subject}', ${subject.semester})">Delete</button>
+            </td>
+        `;
         subjectSemesterList.appendChild(row);
     });
 
-    // Show the modal
     modal.style.display = "block";
-}
-
-function closeModal() {
-    document.getElementById("subjectSemesterModal").style.display = "none";
 }
 
 // Delete Subject-Semester Function
@@ -209,10 +190,7 @@ async function deleteSubjectSemester(facultyId, subject, semester) {
     }
 }
 
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById("subjectSemesterModal");
-    if (event.target === modal) {
-        closeModal();
-    }
-};
+// ✅ Close modal
+function closeModal() {
+    document.getElementById("subjectSemesterModal").style.display = "none";
+}

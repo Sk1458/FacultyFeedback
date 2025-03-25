@@ -14,12 +14,19 @@
 
     <!-- Filter Section -->
     <div class="filter-container">
+        <label for="subjectFilter">Subject:</label>
         <select id="subjectFilter">
-            <option value="">-- Select Subject --</option>
-            <!-- Options will be populated dynamically -->
+            <option value="">All Subjects</option>
         </select>
-        <button onclick="filterBySubject()">Sort by Subject</button>
+
+        <label for="campusFilter">Campus Code:</label>
+        <select id="campusFilter" onchange="applyFilters()">
+            <option value="">All Campuses</option>
+        </select>
+
+        <button onclick="applyFilters()">Apply Filters</button>
     </div>
+
     <div class="table-container">
         <table>
             <thead>
@@ -27,7 +34,8 @@
                     <th>Faculty ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Mobile Number</th>
+                    <th>Mobile</th>
+                    <th>Campus Code</th>
                     <th>Subjects & Semesters</th>
                     <th>Image</th>
                     <th>Delete Faculty</th>
@@ -35,12 +43,13 @@
                 </tr>
             </thead>
             <tbody id="facultyTableBody">
+                <!-- Faculty data will be dynamically populated -->
             </tbody>
         </table>
     </div>
 
-    <!-- Modal for Deleting Subject-Semester -->
-    <div id="subjectSemesterModal" class="modal">
+    <!-- ✅ Modal for Deleting Subject-Semester -->
+    <div id="subjectSemesterModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Delete Subject-Semester</h2>
@@ -54,10 +63,12 @@
                     </tr>
                 </thead>
                 <tbody id="subjectSemesterList">
+                    <!-- Subject-Semester pairs will be dynamically populated -->
                 </tbody>
             </table>
         </div>
     </div>
+    
 
     <footer>
         Admin Panel | Faculty Feedback System

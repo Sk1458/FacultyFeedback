@@ -63,7 +63,8 @@ public class FacultyController {
 	                subjects, // Now sending subject-semester pairs instead of only names
 	                base64Image, 
 	                faculty.getMobileNumber(), 
-	                faculty.getEmail()
+	                faculty.getEmail(),
+	                faculty.getCampusCode()
 	            );
 	        }).collect(Collectors.toList());
 
@@ -75,22 +76,23 @@ public class FacultyController {
     }
 	
 	@PostMapping("/admin/addFaculty")
-    public ResponseEntity<String> addFaculty(@RequestParam(value = "id") int id,
-    										 @RequestParam(value = "name") String name,
-    										 @RequestParam(value = "subjects") String subjectsJson,
-    										 @Valid @RequestParam(value = "mobileNumber") String mobileNumber,
-    										 @Valid @RequestParam(value = "email") String email,
-    										 @RequestParam(value = "image", required = false) MultipartFile image) {
-		
-		logger.info("Add Faculty Request Received from Admin");
+	public ResponseEntity<String> addFaculty(
+	        @RequestParam(value = "id") int id,
+	        @RequestParam(value = "name") String name,
+	        @RequestParam(value = "subjects") String subjectsJson,
+	        @Valid @RequestParam(value = "mobileNumber") String mobileNumber,
+	        @Valid @RequestParam(value = "email") String email,
+	        @RequestParam(value = "campusCode") String campusCode,  // ✅ Added campus code
+	        @RequestParam(value = "image", required = false) MultipartFile image) {
 
-		try {
-			
-			if (facultyRepo.existsById(id)) {
+	    logger.info("Add Faculty Request Received from Admin");
+
+	    try {
+	        if (facultyRepo.existsById(id)) {
 	            return ResponseEntity.badRequest().body("Faculty with ID " + id + " already exists.");
 	        }
-			
-			 // 👉 Backend email validation
+
+	        // 👉 Backend email validation
 	        String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|outlook\\.com|acoe\\.edu\\.in|acet\\.edu\\.in|aec\\.edu\\.in)$";
 	        if (!email.matches(emailRegex)) {
 	            return ResponseEntity.badRequest().body("Invalid email format. Use a valid domain like @gmail.com, @acoe.edu.in, @acet.edu.in, etc.");
@@ -101,37 +103,39 @@ public class FacultyController {
 	        List<FacultySubject> subjects = objectMapper.readValue(subjectsJson, new TypeReference<List<FacultySubject>>() {});
 
 	        byte[] imageData = (image != null && !image.isEmpty()) ? image.getBytes() : null;
-	        
+
 	        // Encrypt the default password
 	        String encryptedPassword = encoder.encode("faculty@123");
-	        
-	        
 
-	        FacultyData faculty = new FacultyData(id, name, subjects, new ArrayList<>(), mobileNumber, email, imageData, encryptedPassword);
+	        // ✅ Added campusCode in the FacultyData constructor
+	        FacultyData faculty = new FacultyData(id, name, subjects, new ArrayList<>(), mobileNumber, email, imageData, encryptedPassword, campusCode);
+	        
 	        facultyRepo.save(faculty);
 
 	        logger.info("Admin Successfully Added Faculty with ID = {}", id);
 	        return ResponseEntity.ok("Faculty added successfully!");
-        }
-		catch (Exception e) {
-			logger.error("An error occurred while adding faculty with ID = {}, Error = {}", id, e.toString());
-			
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("An error occurred: " + e.toString());
-        }
-    }
+	    } 
+	    catch (Exception e) {
+	        logger.error("An error occurred while adding faculty with ID = {}, Error = {}", id, e.toString());
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("An error occurred: " + e.toString());
+	    }
+	}
+
 	
 	@PutMapping("/admin/updateFaculty")
-	public ResponseEntity<String> updateFaculty(@RequestParam int id,
-	        									@RequestParam(required = false) String name,
-	        									@RequestParam(required = false) String subjectsJson,
-	                                            @RequestParam(required = false) String mobileNumber,
-	                                            @RequestParam(required = false) String email,
-	        									@RequestParam(required = false) MultipartFile image) {
+	public ResponseEntity<String> updateFaculty(
+	        @RequestParam int id,
+	        @RequestParam(required = false) String name,
+	        @RequestParam(required = false) String subjectsJson,
+	        @RequestParam(required = false) String mobileNumber,
+	        @RequestParam(required = false) String email,
+	        @RequestParam(required = false) String campusCode,
+	        @RequestParam(required = false) MultipartFile image) {
 
-		logger.warn("Update Faculty Request Received from Admin");
-		
+	    logger.warn("Update Faculty Request Received from Admin");
+
 	    FacultyData faculty = facultyRepo.findById(id).orElse(null);
 	    if (faculty == null) {
 	        return ResponseEntity.badRequest().body("Faculty with ID " + id + " not found.");
@@ -141,37 +145,41 @@ public class FacultyController {
 	        if (name != null && !name.isEmpty()) {
 	            faculty.setName(name);
 	        }
+	        
 	        if (mobileNumber != null && !mobileNumber.isEmpty()) {
 	            faculty.setMobileNumber(mobileNumber);
 	        }
+	        
 	        if (email != null && !email.isEmpty()) {
 	            faculty.setEmail(email);
 	        }
+
+	        // ✅ Capitalize and update campusCode
+	        if (campusCode != null && !campusCode.isEmpty()) {
+	            faculty.setCampusCode(campusCode.toUpperCase());
+	        }
+
 	        if (subjectsJson != null && !subjectsJson.isEmpty()) {
-	        	System.out.printf("Received subjectsJson: {}", subjectsJson);
-	        	
 	            ObjectMapper objectMapper = new ObjectMapper();
 	            List<FacultySubject> updatedSubjects = objectMapper.readValue(subjectsJson, new TypeReference<List<FacultySubject>>() {});
-	            
-	         // Update subject-semester pairs according to the new rules
+
+	            // Update subject-semester pairs logic
 	            List<FacultySubject> existingSubjects = faculty.getSubjects();
 	            Map<Integer, FacultySubject> semesterToSubjectMap = existingSubjects.stream()
 	                    .collect(Collectors.toMap(FacultySubject::getSemester, sub -> sub));
-	            
-	            
+
 	            for (FacultySubject updatedSubject : updatedSubjects) {
 	                if (updatedSubject.getSubject() == null || updatedSubject.getSubject().isEmpty()) {
-	                    // If the subject is empty, it means removal
 	                    semesterToSubjectMap.remove(updatedSubject.getSemester());
 	                } else {
-	                    // Replace or add new subject-semester entry
+	                    // Replace or add subject-semester pair
 	                    semesterToSubjectMap.put(updatedSubject.getSemester(), updatedSubject);
 	                }
 	            }
-	            
-	            // Update faculty subjects with modified subject-semester list
+
 	            faculty.setSubjects(new ArrayList<>(semesterToSubjectMap.values()));
 	        }
+
 	        if (image != null && image.getSize() > 0) {
 	            faculty.setImage(image.getBytes());
 	        }
@@ -179,14 +187,15 @@ public class FacultyController {
 	        facultyRepo.save(faculty);
 	        logger.warn("Admin Successfully Updated Faculty with ID = {}", id);
 	        return ResponseEntity.ok("Faculty updated successfully!");
-	    }
-	    catch (Exception e) {
-	    	
-	    	logger.warn("An error occurred while updating faculty with ID = {}, Error = {}", id, e.toString());
+	    } catch (Exception e) {
+	        logger.warn("An error occurred while updating faculty with ID = {}, Error = {}", id, e.toString());
 	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 	    }
 	}
+
+
+
 
 	@DeleteMapping("/admin/deleteFaculty/{id}")
 	public ResponseEntity<String> deleteFaculty(@PathVariable int id) {
@@ -214,6 +223,7 @@ public class FacultyController {
 		
 	}
 	
+	//In the addFaculty page
 	@DeleteMapping("/admin/deleteFacultySubject/{facultyId}/{subject}/{semester}")
 	public ResponseEntity<String> deleteFacultySubject(
 	        @PathVariable int facultyId,
@@ -252,6 +262,7 @@ public class FacultyController {
 	    }
 	}
 	
+	//In the Delete faculty Page
 	@DeleteMapping("/admin/deleteSubjectSemester/{facultyId}")
 	public ResponseEntity<String> deleteSubjectSemester(@PathVariable int facultyId, @RequestBody Map<String, Object> requestData) {
 	    String subject = (String) requestData.get("subject");

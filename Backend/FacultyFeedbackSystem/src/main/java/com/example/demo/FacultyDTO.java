@@ -10,7 +10,7 @@ public class FacultyDTO {
 	private String base64Image;
 	private String mobileNumber;
 	private String email;
-	
+	private String campusCode;
 	
 	public int getId() {
 		return id;
@@ -48,8 +48,14 @@ public class FacultyDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getCampusCode() {
+		return campusCode;
+	}
+	public void setCampusCode(String campusCode) {
+		this.campusCode = campusCode;
+	}
 	public FacultyDTO(int id, String name, List<FacultySubject> subjects, String base64Image, String mobileNumber,
-			String email) {
+			String email, String campusCode) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -57,6 +63,7 @@ public class FacultyDTO {
 		this.base64Image = base64Image;
 		this.mobileNumber = mobileNumber;
 		this.email = email;
+		this.campusCode = campusCode;
 	}
 	
 	
