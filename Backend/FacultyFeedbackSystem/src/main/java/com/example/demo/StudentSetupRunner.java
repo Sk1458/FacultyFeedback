@@ -18,15 +18,15 @@ public class StudentSetupRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 		
-		String commonStudentId = "student001"; // Common Student ID
-        String rawPassword = "AdityaStudent"; // Default Password
-        String encryptedPassword = encoder.encode(rawPassword);
-
-        StudentCredentials student = new StudentCredentials();
-        student.setStudentId(commonStudentId);
-        student.setPassword(encryptedPassword);
-
-        studentRepo.save(student);
+//		String commonStudentId = "student001"; // Common Student ID
+//        String rawPassword = "AdityaStudent"; // Default Password
+//        String encryptedPassword = encoder.encode(rawPassword);
+//
+//        StudentCredentials student = new StudentCredentials();
+//        student.setStudentId(commonStudentId);
+//        student.setPassword(encryptedPassword);
+//
+//        studentRepo.save(student);
 
 	}
 

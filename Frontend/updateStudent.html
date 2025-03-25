@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Semester</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="css/updateStudent.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ✅ Navbar -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <h1>Update Semester</h1>
+        <a href="admin.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Admin Dashboard
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Bulk Semester Update</h2>
+    <form id="semesterUpdateForm">
+        <label for="year">Select Batch Year:</label>
+        <select id="year" name="year" required>
+            <option value="21">2021</option>
+            <option value="22">2022</option>
+            <option value="23">2023</option>
+            <option value="24">2024</option>
+        </select>
+
+        <label for="semester">Enter New Semester:</label>
+        <input type="number" id="semester" name="semester" min="1" max="8" required>
+
+        <button type="submit">Update Semester</button>
+    </form>
+    <div id="bulkMessage"></div>
+
+    <hr>
+
+    <h2>Update Semester for a Specific Student</h2>
+    <form id="singleStudentForm">
+        <label for="rollNumber">Enter Roll Number:</label>
+        <input type="text" id="rollNumber" name="rollNumber" placeholder="e.g., 21MH1A0572" required>
+
+        <label for="singleSemester">Enter New Semester:</label>
+        <input type="number" id="singleSemester" name="singleSemester" min="1" max="8" required>
+
+        <button type="submit">Update Semester for Student</button>
+    </form>
+    <div id="singleMessage"></div>
+</div>
+
+<script src="/js/updateStudent.js"></script>
+
+</body>
+</html>

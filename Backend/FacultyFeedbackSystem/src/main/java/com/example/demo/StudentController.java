@@ -3,6 +3,7 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -157,7 +159,10 @@ public class StudentController {
 	             // Encrypt the password before saving
 	             String encryptedPassword = passwordEncoder.encode(plainPassword);
 	             
-	             credentials.add(new StudentCredentials(studentId, encryptedPassword));
+	             // ✅ Use the new constructor with the semester field
+	             int defaultSemester = 1;  // Assigning Semester 1 to new students by default
+	             credentials.add(new StudentCredentials(studentId, encryptedPassword, defaultSemester));
+	             
 	             addedCount++;
 	         } else {
 	             skippedCount++;
@@ -173,6 +178,7 @@ public class StudentController {
 	     String message = String.format("Total: %d, Added: %d, Skipped: %d (duplicates)", count, addedCount, skippedCount);
 	     return ResponseEntity.ok(message);
 	 }
+
 	 
 	 @GetMapping("/admin/viewStudentCredentials")
 	 public ResponseEntity<List<String>> viewStudentCredentials(
@@ -184,38 +190,34 @@ public class StudentController {
 	     try {
 	         List<StudentCredentials> students = studentCredentialsRepo.findAll();
 
-	         List<String> filteredRollNumbers = students.stream()
-	                 .map(StudentCredentials::getStudentId)
-	                 .filter(roll -> {
+	         // ✅ Filter students based on the given filters
+	         List<String> filteredResults = students.stream()
+	                 .filter(student -> {
+	                     String roll = student.getStudentId();
 	                     boolean matches = true;
 
-	                     // Apply filters only if they are provided and not "all"
 	                     if (year != null && !year.isEmpty() && !year.equalsIgnoreCase("all")) {
 	                         matches &= roll.startsWith(year);
 	                     }
 	                     if (campus != null && !campus.isEmpty() && !campus.equalsIgnoreCase("all")) {
 	                         matches &= roll.substring(2, 4).equals(campus);
 	                     }
-
-	                     // Handle entry type correctly when "All" is selected
 	                     if (entryType != null && !entryType.isEmpty() && !entryType.equalsIgnoreCase("all")) {
 	                         matches &= roll.substring(4, 6).equals(entryType);
 	                     }
-
-	                     // If "All" is selected in entryType, include both 1A and 5A
 	                     if (entryType != null && entryType.equalsIgnoreCase("all")) {
 	                         matches &= (roll.substring(4, 6).equals("1A") || roll.substring(4, 6).equals("5A"));
 	                     }
-
 	                     if (branch != null && !branch.isEmpty() && !branch.equalsIgnoreCase("all")) {
 	                         matches &= roll.substring(6, 8).equals(branch);
 	                     }
 
 	                     return matches;
 	                 })
+	                 .map(student -> student.getStudentId() + " (Semester: " + student.getSemester() + ")")  // 🛑 Append semester
 	                 .collect(Collectors.toList());
 
-	         return ResponseEntity.ok(filteredRollNumbers);
+	         return ResponseEntity.ok(filteredResults);
 
 	     } catch (Exception e) {
 	         e.printStackTrace();
@@ -223,9 +225,7 @@ public class StudentController {
 	     }
 	 }
 
-
-
-	 
+ 
 	 // Delete a single student credential
 	 @DeleteMapping("/admin/deleteStudentCredential/{studentId}")
 	 public ResponseEntity<String> deleteStudentCredential(@PathVariable String studentId) {
@@ -281,6 +281,70 @@ public class StudentController {
 	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting filtered credentials.");
 	     }
 	 }
+	 
+	// ✅ Bulk semester update endpoint
+	 @PutMapping("/admin/updateStudentSemester")
+	 public ResponseEntity<String> updateStudentSemester(
+	         @RequestParam String year,      // Batch year code (e.g., "21")
+	         @RequestParam int semester) {   // New semester value
+
+	     try {
+	         // Fetch all students with the specified year code
+	         List<StudentCredentials> students = studentCredentialsRepo.findAll().stream()
+	                 .filter(s -> s.getStudentId().startsWith(year))
+	                 .collect(Collectors.toList());
+
+	         // Check if any students match the filter
+	         if (students.isEmpty()) {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                     .body("No students found for year: " + year);
+	         }
+
+	         // Update the semester for all matching students
+	         for (StudentCredentials student : students) {
+	             student.setSemester(semester);
+	         }
+
+	         // Save the updated students
+	         studentCredentialsRepo.saveAll(students);
+
+	         // Return success message
+	         return ResponseEntity.ok("Updated " + students.size() + " students to semester " + semester);
+
+	     } catch (Exception e) {
+	         e.printStackTrace();
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                 .body("Error updating student semesters.");
+	     }
+	 }
+	 
+	 @PutMapping("/admin/updateStudentSemesterByRollNumber")
+	 public ResponseEntity<String> updateStudentSemesterByRollNumber(
+	         @RequestParam String rollNumber,
+	         @RequestParam int semester) {
+
+	     try {
+	         // Check if the student with the given roll number exists
+	         Optional<StudentCredentials> studentOpt = studentCredentialsRepo.findById(rollNumber);
+
+	         if (studentOpt.isPresent()) {
+	             StudentCredentials student = studentOpt.get();
+	             
+	             // Update the semester
+	             student.setSemester(semester);
+	             studentCredentialsRepo.save(student);
+
+	             return ResponseEntity.ok("Semester updated to " + semester + " for student: " + rollNumber);
+	         } else {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student with roll number " + rollNumber + " not found.");
+	         }
+	     } catch (Exception e) {
+	         e.printStackTrace();
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                 .body("Failed to update semester for student: " + rollNumber);
+	     }
+	 }
+
 
 	
 }

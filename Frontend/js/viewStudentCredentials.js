@@ -4,18 +4,18 @@ const prevBtn = document.getElementById("prevPage");
 const nextBtn = document.getElementById("nextPage");
 const pageInfo = document.getElementById("pageInfo");
 
-let allRollNumbers = [];
+let allStudentData = [];
 let currentPage = 1;
-const pageSize = 20; // Number of roll numbers per page
+const pageSize = 20;  // Number of students per page
 
 // Fetch and display data with pagination
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    currentPage = 1; // Reset to first page on new filter
-    await fetchRollNumbers();
+    currentPage = 1;  // Reset to first page on new filter
+    await fetchStudentData();
 });
 
-async function fetchRollNumbers() {
+async function fetchStudentData() {
     const year = document.getElementById("year").value;
     const campus = document.getElementById("campus").value;
     const entryType = document.getElementById("entryType").value;
@@ -31,7 +31,7 @@ async function fetchRollNumbers() {
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch data");
 
-        allRollNumbers = await response.json();
+        allStudentData = await response.json();
         displayPage(currentPage);
         updatePaginationButtons();
 
@@ -40,31 +40,44 @@ async function fetchRollNumbers() {
     }
 }
 
-// Display the current page of roll numbers
+// ✅ Display the current page of student data
 function displayPage(page) {
     tableBody.innerHTML = "";
 
     const startIndex = (page - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, allRollNumbers.length);
+    const endIndex = Math.min(startIndex + pageSize, allStudentData.length);
 
     for (let i = startIndex; i < endIndex; i++) {
         const row = document.createElement("tr");
-        const cell = document.createElement("td");
-        cell.textContent = allRollNumbers[i];
-        row.appendChild(cell);
+
+        const rollNumberCell = document.createElement("td");
+        const semesterCell = document.createElement("td");
+
+        const studentString = allStudentData[i];
+
+        // ✅ Split the combined string into roll number and semester
+        const [rollNumber, semesterPart] = studentString.split(" (Semester: ");
+        const semester = semesterPart ? semesterPart.replace(")", "") : "N/A";
+
+        rollNumberCell.textContent = rollNumber;
+        semesterCell.textContent = semester;
+
+        row.appendChild(rollNumberCell);
+        row.appendChild(semesterCell);
+
         tableBody.appendChild(row);
     }
 
-    pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(allRollNumbers.length / pageSize)}`;
+    pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(allStudentData.length / pageSize)}`;
 }
 
-// Update the button states based on the current page
+// ✅ Update the button states based on the current page
 function updatePaginationButtons() {
     prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage * pageSize >= allRollNumbers.length;
+    nextBtn.disabled = currentPage * pageSize >= allStudentData.length;
 }
 
-// Pagination button event handlers
+// ✅ Pagination button event handlers
 prevBtn.addEventListener("click", () => {
     if (currentPage > 1) {
         currentPage--;
@@ -74,7 +87,7 @@ prevBtn.addEventListener("click", () => {
 });
 
 nextBtn.addEventListener("click", () => {
-    if (currentPage * pageSize < allRollNumbers.length) {
+    if (currentPage * pageSize < allStudentData.length) {
         currentPage++;
         displayPage(currentPage);
         updatePaginationButtons();

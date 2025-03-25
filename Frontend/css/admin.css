@@ -25,13 +25,12 @@ body::before {
     background: url('https://www.transparenttextures.com/patterns/inspiration-geometry.png');
     opacity: 0.2;
     pointer-events: none;
+    z-index: -1;
 }
-
 
 /* Header with Glassmorphism */
 header {
-    background: rgba(44, 62, 80, 0.8);
-    background: linear-gradient(90deg,  #2c3e50,#2E8B57);
+    background: linear-gradient(90deg, #2c3e50, #2E8B57);
     backdrop-filter: blur(10px);
     color: white;
     padding: 20px 40px;
@@ -77,12 +76,14 @@ header {
 
 /* Main Content Container */
 .container {
-    margin-top: 100px;
+    margin-top: 120px;         /* Creates space below the navbar */
+    margin-bottom: 80px;       /* Creates space above the footer */
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 30px;
     max-width: 1200px;
+    min-height: calc(100vh - 180px);   /* Prevents overlapping */
 }
 
 /* Glassmorphism Cards */
@@ -145,15 +146,15 @@ header {
 
 /* Footer */
 footer {
-    margin-top: auto;
     background: linear-gradient(90deg, #2E8B57, #2c3e50);
     color: white;
     padding: 18px;
     width: 100%;
     text-align: center;
     font-size: 14px;
-    position: fixed;
+    position: sticky;        /* Sticky footer */
     bottom: 0;
+    z-index: 999;            /* Ensures it stays above content */
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -168,6 +169,7 @@ footer {
     .container {
         flex-direction: column;
         align-items: center;
+        margin-bottom: 100px;  /* Space for footer on smaller screens */
     }
 
     .card {
