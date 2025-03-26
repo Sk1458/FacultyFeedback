@@ -14,6 +14,9 @@ async function validateStudentLogin(event) {
 
         const isValid = await response.json();
         if (isValid) {
+            // Store roll number in local storage
+            localStorage.setItem("rollNumber", studentId);
+            
             window.location.href = "feedback.html";
         } else {
             errorMessage.innerText = "Invalid credentials! Please try again.";

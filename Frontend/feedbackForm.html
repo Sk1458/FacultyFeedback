@@ -22,13 +22,14 @@
             <h2>Provide Your Feedback</h2>
             <form id="feedbackForm">
 
-                <label for="currentSemester">Enter Current Semester:</label>
-                <input type="number" id="currentSemester" min="1" max="8" required>
+                <!-- Auto-filled and Readonly Semester & Subject -->
+                <label for="currentSemester">Semester:</label>
+                <input type="text" id="currentSemester" readonly>
 
-                <label for="selectSubject">Select Subject:</label>
-                <select id="selectSubject" required></select>
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" readonly>
 
-                <!-- Feedback Questions with Comment Boxes -->
+                <!-- Feedback Questions -->
                 <label for="regularity">Regularity to Class:</label>
                 <textarea id="regularity" rows="3" required></textarea>
 

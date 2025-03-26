@@ -2,7 +2,10 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,40 +38,134 @@ public class StudentController {
 	
 	Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
-	 @GetMapping("/student/viewFaculty/{facultyId}")
-	    public ResponseEntity<FacultyData> getFacultyById(@PathVariable("facultyId") int facultyId) {
-	        
-	        logger.info("View Faculty Request Received from Student for Faculty ID = {}", facultyId);
-	        
-	        try {
-	        	
-	            FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
-	            if (faculty != null) {
-	                // Convert image to base64 if it exists
-	            	
-	                if (faculty.getImage() != null) {
-	                    String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
-	                    faculty.setBase64Image(base64Image);  // Assuming you have this method in your FacultyData model
-	                }
-	                
-	                logger.info("Faculty details successfully retrieved for ID = {}", facultyId);
-	                System.out.println("Faculty Subjects: {}" + faculty.getSubjects());
-	                return ResponseEntity.ok(faculty);
-	            }
-	            else {
-	            	
-	                logger.warn("Faculty with ID = {} not found", facultyId);
-	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	            }
-	        }
-	        catch (Exception e) {
-	        	
-	            logger.error("An error occurred while viewing faculty details for ID = {}, Error = {}", facultyId, e.toString());
-	            e.printStackTrace();
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	        }
-	    }
+	//For the feedback form
+	@GetMapping("/student/viewFaculty/{facultyId}")
+	public ResponseEntity<FacultyData> getFacultyById(@PathVariable("facultyId") int facultyId) {
+    
+		logger.info("View Faculty Request Received from Student for Faculty ID = {}", facultyId);
+    
+		try {
+    	
+			FacultyData faculty = facultyRepo.findById(facultyId).orElse(null);
+			if (faculty != null) {
+            // Convert image to base64 if it exists
+	
+				if (faculty.getImage() != null) {
+				String base64Image = Base64.getEncoder().encodeToString(faculty.getImage());
+				faculty.setBase64Image(base64Image);  // Assuming you have this method in your FacultyData model
+				}
+	    
+				logger.info("Faculty details successfully retrieved for ID = {}", facultyId);
+				System.out.println("Faculty Subjects: {}" + faculty.getSubjects());
+				return ResponseEntity.ok(faculty);
+			}
+			else {
+    	
+				logger.warn("Faculty with ID = {} not found", facultyId);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+			}
+		}
+		catch (Exception e) {
+    	
+	       logger.error("An error occurred while viewing faculty details for ID = {}, Error = {}", facultyId, e.toString());
+	       e.printStackTrace();
+	       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	 }
 	 
+	@GetMapping("/student/faculty-list")
+	public ResponseEntity<?> getFacultyList(@RequestParam String rollNumber) {
+
+	    if (rollNumber == null || rollNumber.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Roll number is required.");
+	    }
+
+	    // ✅ Fetch student credentials by roll number
+	    Optional<StudentCredentials> studentOpt = studentCredentialsRepo.findById(rollNumber);
+	    if (studentOpt.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found.");
+	    }
+
+	    StudentCredentials student = studentOpt.get();
+	    Integer semester = student.getSemester();
+
+	    // ✅ Extract campus code from roll number
+	    String campusCode = rollNumber.substring(2, 4).toUpperCase();  // "MH", "P3", "A9"
+
+	    // ✅ Fetch faculty by campus code and semester
+	    List<FacultyData> facultyList = facultyRepo.findByCampusCodeAndSubjectsSemester(campusCode, semester);
+
+	    if (facultyList.isEmpty()) {
+	        return ResponseEntity.ok(Collections.singletonMap("message", "No faculty found for this campus and semester."));
+	    }
+
+	    // ✅ Prepare the response
+	    List<Map<String, Object>> facultyResponse = new ArrayList<>();
+	    for (FacultyData faculty : facultyList) {
+	        Map<String, Object> facultyMap = new HashMap<>();
+	        facultyMap.put("id", faculty.getId());
+	        facultyMap.put("name", faculty.getName());
+	        facultyMap.put("email", faculty.getEmail());
+	        facultyMap.put("mobile", faculty.getMobileNumber());
+	        facultyMap.put("campusCode", faculty.getCampusCode());
+
+	        // ✅ Include the Base64 image in the response
+	        if (faculty.getImage() != null) {
+	            facultyMap.put("image", faculty.getImage()); 
+	        } else {
+	            facultyMap.put("image", null); 
+	        }
+
+	        // ✅ Include subject-semester pairs
+	        List<Map<String, Object>> subjectSemesterPairs = faculty.getSubjects().stream()
+	            .filter(sub -> sub.getSemester().equals(semester))
+	            .map(sub -> {
+	                Map<String, Object> map = new HashMap<>();
+	                map.put("subject", sub.getSubject());
+	                map.put("semester", sub.getSemester());
+	                return map;
+	            })
+	            .collect(Collectors.toList());
+
+	        facultyMap.put("subjects", subjectSemesterPairs);
+	        facultyResponse.add(facultyMap);
+	    }
+
+	    return ResponseEntity.ok(facultyResponse);
+
+	}
+	
+	// ✅ New endpoint to get student details by roll number
+	@GetMapping("/student/getStudentDetails")
+	public ResponseEntity<?> getStudentDetails(@RequestParam String rollNumber) {
+	    try {
+	        Optional<StudentCredentials> studentOpt = studentCredentialsRepo.findById(rollNumber);
+
+	        if (studentOpt.isPresent()) {
+	            StudentCredentials student = studentOpt.get();
+
+	            // ✅ Extract the campus code from the roll number itself
+	            String campusCode = rollNumber.substring(2, 4);  
+
+	            // ✅ Prepare the response with rollNumber, semester, and extracted campus code
+	            Map<String, Object> response = new HashMap<>();
+	            response.put("rollNumber", student.getStudentId());
+	            response.put("semester", student.getSemester());
+	            response.put("campusCode", campusCode);  // Extracted from roll number
+
+	            return ResponseEntity.ok(response);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("Error fetching student details: " + e.getMessage());
+	    }
+	}
+
+
+	
 	 @PostMapping("/student/submitFeedback")
 	 public ResponseEntity<String> submitFeedback(@RequestBody FeedbackEntry feedback, @RequestParam int facultyId) {
 		 logger.info("Feedback submission request received for Faculty ID = {}", facultyId);
