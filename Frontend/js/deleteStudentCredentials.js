@@ -65,7 +65,6 @@ function displayPage() {
 }
 
 // Function to update pagination controls
-// Function to update pagination controls
 function updatePaginationControls() {
     // Check if the pagination container exists; if not, create it dynamically
     let paginationControls = document.querySelector(".pagination-controls");
@@ -115,7 +114,9 @@ async function deleteCredential(rollNumber) {
     if (!confirm(`Are you sure you want to delete ${rollNumber}?`)) return;
 
     try {
-        const response = await fetch(`${apiUrl}/deleteStudentCredential/${rollNumber}`, {
+        const cleanRollNumber = rollNumber.trim().split(" ")[0];  // Extract only the roll number
+
+        const response = await fetch(`${apiUrl}/deleteStudentCredential/${cleanRollNumber}`, {
             method: "DELETE"
         });
 
