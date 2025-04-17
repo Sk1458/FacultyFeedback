@@ -45,13 +45,14 @@ The Faculty Feedback System, powered by StanfordNLP-based sentiment analysis, pr
     - Communication  
     - Engagement  
     - Explanation quality  
-  - Textbox for additional comments
+    - Additional Textbox for additional comments
 - **Forgot Password**: OTP sent to institutional email (`{roll}@acoe.edu.in`), handled via backend-only email logic.
 
 ### 📊 Faculty Performance Analysis using NLP
 - **NLP Sentiment Analysis**:
   - Sentiment-based scoring from student comments using **Stanford NLP**.
   - Sentiment categories like *Positive*, *Negative*, etc., used for detailed analysis.
+  - Filters Abusive words or sentances from the student given feedback and marks them as inappropriate
 
 ### 👨‍🏫 Faculty Dashboard
 - **Faculty Login** using ID, email, or mobile.
@@ -59,6 +60,7 @@ The Faculty Feedback System, powered by StanfordNLP-based sentiment analysis, pr
   - View overall performance scores.
   - Dynamic chart visualizations (bar, pie, and spread).
   - Quick suggestions based on areas needing improvement.
+- **Forgot Password**: OTP sent to faculty's email, handled via backend-only email logic.
 
 ---
 
