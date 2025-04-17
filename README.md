@@ -1,62 +1,87 @@
-# Faculty Feedback System
+# Enhancing faculty evaluation through NLP-based sentiment analysis of student feedback
 
-A full-stack web application for managing and analyzing faculty performance feedback. Built using **Spring Boot**, **HTML**, **CSS**, **JavaScript**, and **Chart.js**, this project allows administrators to manage faculty details and students to provide feedback.
+The Faculty Feedback System, powered by StanfordNLP-based sentiment analysis, provides a data-driven, automated, and dynamic approach to faculty evaluation. By leveraging real-time sentiment classification, dynamic visual representations, and automated handling of inappropriate feedback, the system offers a more insightful and efficient alternative to traditional evaluation methods. Faculty members gain actionable insights into their strengths and areas for improvement, while administrators benefit from structured performance tracking for institutional decision-making. The system not only enhances the quality of feedback analysis but also fosters a continuous improvement culture in academia. Future work can explore advanced NLP techniques and deep learning models to further refine sentiment accuracy and expand functionality.
 
 ---
 
 ## Features
 
-### Admin Functionalities
-- **Login Page**: Secure login for administrators.
-- **Manage Faculty**:
-  - Add new faculty members.
-  - Update faculty details.
-  - Delete faculty records.
-  - View a list of all faculty members with their details.
-- **Performance Analysis**:
-  - Calculate overall feedback scores for faculty based on student responses.
-  - Visualize faculty performance using pie charts for each faculty member.
-
-### Student Functionalities
-- **Feedback System**:
-  - Secure login with a common student ID and password.
-  - View a list of faculty members and give feedback for each.
-  - Feedback form includes fields like:
-    - Subject taught
+### 👨‍💼Admin Functionalities
+- **Admin Login Page**: Secure login with form validation.
+- **Faculty Management**:
+  - Add faculty along with:
+    - Subject-Semester mapping
+    - Campus Code
+    - Profile Image
+    - Mobile number & Email
+  - Update faculty details (subject-semester pairs can be replaced or extended).
+  - Delete full faculty records or specific subject-semester entries.
+  - View all faculty and filter based on:
+    - Subject
     - Semester
-    - Ratings for attributes like regularity, knowledge depth, communication, engagement, and explanation quality.
-    - Additional comments section.
+    - Campus Code
+- **Student Credentials Management**:
+  - Auto-generate student credentials from roll number.
+    - **Username**: Roll number  
+    - **Password**: `AdityaStudent`
+  - Filter students by:
+    - Year of joining
+    - Campus code
+    - Entry type
+    - Branch code
+  - Delete individual or bulk student credentials.
+- **Semester Update**:
+  - Update a student’s semester individually by roll number.
+  - Bulk semester update option also available.
+- **Forgot Password**: OTP sent to admin's email, handled via backend-only email logic.
+
+### 🎓 Student Functionalities
+- **Student Login**: Secure login using roll number and password.
+- **Feedback Submission**:
+  - Students can give feedback only to faculties that match their semester and campus.
+  - Feedback includes ratings for:
+    - Regularity  
+    - Knowledge depth  
+    - Communication  
+    - Engagement  
+    - Explanation quality  
+  - Textbox for additional comments
+- **Forgot Password**: OTP sent to institutional email (`{roll}@acoe.edu.in`), handled via backend-only email logic.
+
+### 📊 Faculty Performance Analysis using NLP
+- **NLP Sentiment Analysis**:
+  - Sentiment-based scoring from student comments using **Stanford NLP**.
+  - Sentiment categories like *Positive*, *Negative*, etc., used for detailed analysis.
+
+### 👨‍🏫 Faculty Dashboard
+- **Faculty Login** using ID, email, or mobile.
+- Personalized dashboard:
+  - View overall performance scores.
+  - Dynamic chart visualizations (bar, pie, and spread).
+  - Quick suggestions based on areas needing improvement.
 
 ---
 
 ## Tech Stack
 
 ### Backend
-- **Spring Boot**: Used for building RESTful APIs and handling business logic.
-- **Hibernate**: For database interaction.
+- **Spring Boot** – REST API + Business Logic
+- **Hibernate / JPA** – ORM for MySQL DB
+- **NLP (Stanford CoreNLP)** – Sentiment Analysis for Comments
 
 ### Frontend
-- **HTML/CSS/JavaScript**: For creating interactive user interfaces.
-- **Chart.js**: To render graphical representations of faculty performance.
+- **HTML/CSS/JavaScript** – Dynamic UI
+- **Chart.js** – Data Visualization
+- **Bootstrap** – Styling & Layout
 
 ### Database
-- **MySQL Database**: For development and testing.
+- **MySQL** – Core Data Store
 
 ---
 
 ## Screenshots
 
-### Login Page
-![LoginPage](https://github.com/user-attachments/assets/cad9f796-5671-4f35-9a25-66b473b6c0fb)
 
-### Admin Dashboard
-![dashboard](https://github.com/user-attachments/assets/ff89831a-f3db-4518-beb0-9a7929eb34c0)
-
-### Student Feedback Page
-![FeedbackList](https://github.com/user-attachments/assets/60f13ad0-cf55-4d46-a4c4-fe2d8613ae3a)
-
-### Faculty Performance Analysis
-![FacultyPerf](https://github.com/user-attachments/assets/10275290-90d7-4c66-bd6a-183fe802446c)
 
 ---
 
@@ -93,53 +118,3 @@ A full-stack web application for managing and analyzing faculty performance feed
 - 5. **Run the application:**
     - Launch the backend application from your Java-supported IDE.
     - Access the frontend HTML pages using the live rendering method chosen earlier.
-
-## Project Directory Structure
-```bash
-FacultyFeedback(Repository)
-├───Backend
-│   └───FacultyFeedbackSystem
-│       ├───.mvn
-│       │   └───wrapper
-│       ├───.settings
-│       ├───logs
-│       │       /HTML file showcasing all the log activities
-│       ├───src
-│       │   ├───main
-│       │   │   ├───java
-│       │   │   │   └───com
-│       │   │   │       └───example
-│       │   │   │           └───demo
-│       │   │   │                   /All the .java files here
-│       │   │   └───resources
-│       │   │       ├───static
-│       │   │       └───templates
-│       │   └───test
-│       │       └───java
-│       │           └───com
-│       │               └───example
-│       │                   └───demo
-│       └───target
-│           ├───classes
-│           │   │   application.properties
-│           │   │   LogBack.xml
-│           │   ├───com
-│           │   │   └───example
-│           │   │       └───demo
-│           │   │               /All the .class files here
-│           │   └───META-INF
-│           │       └───maven
-│           │           └───CSE21
-│           │               └───FacultyFeedbackSystem
-│           │                       pom.properties
-│           │                       pom.xml
-│           └───test-classes
-│               └───com
-│                   └───example
-│                       └───demo
-└───Frontend
-    |  /All the HTML files here
-    │
-    ├───css      
-    └───js
-
