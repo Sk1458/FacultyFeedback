@@ -80,7 +80,53 @@ The Faculty Feedback System, powered by StanfordNLP-based sentiment analysis, pr
 ---
 
 ## Screenshots
+- **Home Page**
 
+  ![Home Page](https://github.com/Sk1458/FacultyFeedback/blob/main/home.png)
+
+- **Login Page**
+
+  ![Login Page](https://github.com/Sk1458/FacultyFeedback/blob/main/LoginPage.png)
+
+- **Admin Login**
+
+  ![Admin Login](https://github.com/Sk1458/FacultyFeedback/blob/main/AdminLogin.png)
+
+- **Admin Dashboard**
+
+  ![Admin Dashboard](https://github.com/Sk1458/FacultyFeedback/blob/main/AdminDashboard.png)
+
+- **Student Login**
+
+  ![Student Login](https://github.com/Sk1458/FacultyFeedback/blob/main/StudentLogin.png)
+
+- **Student Dashboard**
+
+  ![Student Dashboard](https://github.com/Sk1458/FacultyFeedback/blob/main/StudentDashboard.png)
+
+- **Feedback Form**
+ 
+  ![Feedback Form](https://github.com/Sk1458/FacultyFeedback/blob/main/FeedbackForm.png)
+
+- **Faculty Login**
+
+   ![Faculty Login](https://github.com/Sk1458/FacultyFeedback/blob/main/FacultyLogin.png)
+
+- **Faculty Dashboard**
+
+  ![Faculty Dashboard](https://github.com/Sk1458/FacultyFeedback/blob/main/FacultyDashboard.png)
+
+- **Bar Graph**
+
+  ![bar Graph](https://github.com/Sk1458/FacultyFeedback/blob/main/BarGraph.png)
+
+- **Pie Chart**
+
+  ![Pie Chart](https://github.com/Sk1458/FacultyFeedback/blob/main/PieChart.png)
+
+- **Radar Chart**
+
+  ![Radar Chart](https://github.com/Sk1458/FacultyFeedback/blob/main/radarChart.png)
 
 
 ---
